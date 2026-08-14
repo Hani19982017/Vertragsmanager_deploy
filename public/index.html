@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vertragsmanager</title>
+<link rel="icon" href="/logo.png">
+<link rel="stylesheet" href="/styles.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js" defer></script>
+</head>
+<body>
+<div id="auth"></div>
+<div id="app" style="display:none"><div class="shell">
+  <aside class="side">
+    <img src="/logo.png" alt="Vertragsmanager">
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <b id="who"></b>
+      <div id="company" style="margin-bottom:6px"></div>
+      <button id="langBtn" style="font-size:12px"></button>
+      <button id="outBtn" style="font-size:12px;margin-inline-start:10px"></button>
+      <div class="lgl">
+        <a onclick="Legal('imp')">Impressum</a>
+        <a onclick="Legal('dsg')">Datenschutz</a>
+        <a onclick="Legal('agb')">AGB</a>
+      </div>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div></div>
+<div id="mod"></div><div id="toast"></div><div id="ck"></div>
+<script src="/app.js"></script>
+</body>
+</html>
