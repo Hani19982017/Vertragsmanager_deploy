@@ -12,6 +12,10 @@ services:
         value: production
       - key: JWT_SECRET
         generateValue: true
+      - key: STORAGE_KEY
+        generateValue: true
+      - key: CRON_SECRET
+        generateValue: true
       - key: DATABASE_URL
         fromDatabase:
           name: vertragsmanager-db
@@ -20,10 +24,58 @@ services:
         sync: false
       - key: UPLOAD_DIR
         value: /var/data/uploads
+      # optional — leave unset until you have them
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: STRIPE_PRICE_STARTER
+        sync: false
+      - key: STRIPE_PRICE_GROWTH
+        sync: false
+      - key: STRIPE_PRICE_PRO
+        sync: false
+      - key: S3_BUCKET
+        sync: false
+      - key: S3_REGION
+        sync: false
+      - key: S3_ENDPOINT
+        sync: false
+      - key: S3_ACCESS_KEY_ID
+        sync: false
+      - key: S3_SECRET_ACCESS_KEY
+        sync: false
     disk:
       name: uploads
       mountPath: /var/data
       sizeGB: 5
+
+  - type: cron
+    name: vertragsmanager-daily
+    runtime: node
+    region: frankfurt
+    plan: starter
+    schedule: "0 5 * * *"
+    buildCommand: npm ci
+    startCommand: node src/cron-run.js
+    envVars:
+      - key: APP_URL
+        sync: false
+      - key: CRON_SECRET
+        fromService:
+          name: vertragsmanager
+          type: web
+          envVarKey: CRON_SECRET
 
 databases:
   - name: vertragsmanager-db

@@ -73,7 +73,40 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  ckT:"Cookies und lokale Speicherung",
  ckS:"Wir verwenden technisch notwendige Speichertechnologien, damit die Anwendung funktioniert. Optionale Technologien setzen wir nur mit Ihrer Einwilligung ein.",
  ckNec:"Nur notwendige",ckAll:"Alle akzeptieren",ckMore:"Details",
- searchDocs:"In Dokumenten suchen…"},
+ searchDocs:"In Dokumenten suchen…",
+ nav2:{camp:"Kampagnen",inbox:"Posteingang",rep:"Berichte",bill:"Abonnement"},
+ forgot:"Passwort vergessen?",resetT:"Neues Passwort setzen",resetSent:"Wenn die Adresse bekannt ist, wurde eine E-Mail versendet.",
+ code2fa:"Code aus der App",twofa:"Zwei-Faktor-Authentifizierung",twofaOn:"Aktiviert",twofaOff:"Deaktiviert",
+ enable:"Aktivieren",disable:"Deaktivieren",scan:"Code in der Authenticator-App scannen oder Schlüssel eintragen:",
+ campT:"Kampagnen",newCamp:"Neue Kampagne",chan:"Kanal",catT:"Nachrichtentyp",
+ catU:"Service — an bestehenden Vertrag gebunden",catM:"Werbung — Einwilligung nötig",
+ segT:"Zielgruppe",segA:"Kunden ohne diese Dienstleistung",segB:"Kunden bei diesem Anbieter",
+ segC:"Verträge, die in 90 Tagen auslaufen",dlim:"Tageslimit",recip:"Empfänger",
+ excl:"ohne Einwilligung ausgeschlossen",daysN:"{n} Tage",optOutT:"Abmeldehinweis wird automatisch angehängt",
+ sendNow:"Erste Charge senden",pauseC:"Pausieren",runT:"Läuft",doneT:"Abgeschlossen",pausedT:"Pausiert",
+ sentT:"gesendet",autoPause:"Automatisch pausiert — Fehlerquote über 5 %",
+ waNote:"WhatsApp-Nachrichten werden zum Versand vorbereitet. Verbinden Sie einen offiziellen Anbieter, um automatisch zu senden.",
+ inboxT:"Posteingang",connT:"E-Mail-Konto verbinden",
+ connS:"Funktioniert mit Gmail, Outlook, IONOS, Strato, Hostinger und jedem eigenen Server",
+ preset:"Anbieter",imapH:"IMAP-Server",portL:"Port",smtpH:"SMTP-Server",appPw:"App-Passwort",
+ conn:"Verbinden",disc:"Trennen",syncT:"Abrufen",notConn:"Kein E-Mail-Konto verbunden",
+ suggT:"Erkannte Verträge",suggS:"Nichts wird automatisch gespeichert — Sie bestätigen jeden Eintrag",
+ archiveIt:"Als Vertrag archivieren",ignoreIt:"Ignorieren",matchedT:"Zugeordnet",unmatchedT:"Kein Kunde erkannt",
+ imported:"{n} Nachrichten importiert",
+ repT:"Berichte",bySrv:"Nach Dienstleistung",byAgent:"Nach Mitarbeiter",byMonth:"Fällige Verträge je Monat",
+ qualT:"Datenqualität",noEnd:"ohne Vertragsende",noNotice:"ohne Kündigungsfrist",
+ noDocQ:"ohne Dokument",unpaidQ:"Provision offen",
+ billT:"Abonnement",curPlan:"Aktueller Plan",choose:"Auswählen",manage:"Zahlungen verwalten",
+ billOff:"Zahlungen sind noch nicht eingerichtet.",
+ asstT:"Assistent",asstS:"Schreiben und Nachrichten aus den Daten dieses Kunden",
+ asstAsk:"Was soll ich schreiben?",asstPh:"z. B. Kündigung, Widerruf, Verlängerung anbieten…",
+ gen:"Erstellen",print:"Drucken",asMail:"Als E-Mail öffnen",result:"Ergebnis",
+ k:{kuendigung:"Kündigung",widerruf:"Widerruf (14 Tage)",sonderkuendigung:"Sonderkündigung",
+    umzug:"Umzug melden",verlaengerung:"Verlängerung anbieten",crossselling:"Cross-Selling",
+    unterlagen:"Unterlagen anfordern"},
+ servT:"Dienstleistungen",addSrvT:"Hinzufügen",sendersT:"Absenderadressen",defA:"Standard",
+ setDef:"Als Standard",companyT:"Firmendaten",leadT:"Standard-Erinnerung (Tage)",
+ protectT:"Mitarbeiter sehen nur eigene Kunden",digestT:"Tägliche Zusammenfassung per E-Mail"},
 
 ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  login:"تسجيل الدخول",signup:"إنشاء حساب",toSignup:"إنشاء حساب جديد",toLogin:"لدي حساب",
@@ -140,7 +173,40 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  ckT:"Cookies und lokale Speicherung",
  ckS:"Wir verwenden technisch notwendige Speichertechnologien, damit die Anwendung funktioniert. Optionale Technologien setzen wir nur mit Ihrer Einwilligung ein.",
  ckNec:"Nur notwendige",ckAll:"Alle akzeptieren",ckMore:"Details",
- searchDocs:"ابحث داخل الملفات…"}
+ searchDocs:"ابحث داخل الملفات…",
+ nav2:{camp:"الحملات",inbox:"صندوق الوارد",rep:"التقارير",bill:"الاشتراك"},
+ forgot:"نسيت كلمة المرور؟",resetT:"تعيين كلمة مرور جديدة",resetSent:"إن كان البريد معروفاً فقد أُرسلت رسالة.",
+ code2fa:"الرمز من التطبيق",twofa:"التحقق بخطوتين",twofaOn:"مفعّل",twofaOff:"غير مفعّل",
+ enable:"تفعيل",disable:"إيقاف",scan:"امسح الرمز في تطبيق المصادقة أو أدخل المفتاح:",
+ campT:"الحملات",newCamp:"حملة جديدة",chan:"القناة",catT:"نوع الرسالة",
+ catU:"خدمية — مرتبطة بعقد قائم",catM:"تسويقية — تحتاج موافقة",
+ segT:"الشريحة",segA:"زبائن لا يملكون هذه الخدمة",segB:"زبائن هذا المزوّد",
+ segC:"عقود تنتهي خلال 90 يوماً",dlim:"الحد اليومي",recip:"المستقبلون",
+ excl:"مستبعد بلا موافقة",daysN:"{n} يوم",optOutT:"يُضاف سطر إيقاف الرسائل تلقائياً",
+ sendNow:"إرسال الدفعة الأولى",pauseC:"إيقاف مؤقت",runT:"جارية",doneT:"منتهية",pausedT:"موقوفة",
+ sentT:"أُرسلت",autoPause:"أُوقفت تلقائياً — تجاوزت نسبة الفشل 5%",
+ waNote:"رسائل واتساب تُجهَّز للإرسال. اربط مزوّداً رسمياً للإرسال التلقائي.",
+ inboxT:"صندوق الوارد",connT:"ربط حساب البريد",
+ connS:"يعمل مع جيميل وأوتلوك وهوستنجر وأي خادم بريد خاص",
+ preset:"المزوّد",imapH:"خادم الاستقبال",portL:"المنفذ",smtpH:"خادم الإرسال",appPw:"كلمة مرور التطبيق",
+ conn:"ربط",disc:"فصل",syncT:"جلب الرسائل",notConn:"لا يوجد حساب بريد مرتبط",
+ suggT:"عقود مكتشفة",suggS:"لا يُحفظ شيء تلقائياً — أنت تؤكد كل عنصر",
+ archiveIt:"أرشفة كعقد",ignoreIt:"تجاهل",matchedT:"مطابق",unmatchedT:"لم يُتعرّف على زبون",
+ imported:"تم استيراد {n} رسالة",
+ repT:"التقارير",bySrv:"حسب الخدمة",byAgent:"حسب الموظف",byMonth:"العقود المستحقة شهرياً",
+ qualT:"جودة البيانات",noEnd:"بلا تاريخ انتهاء",noNotice:"بلا مهلة إنهاء",
+ noDocQ:"بلا ملف",unpaidQ:"عمولة معلّقة",
+ billT:"الاشتراك",curPlan:"الباقة الحالية",choose:"اختيار",manage:"إدارة الدفع",
+ billOff:"الدفع غير مُعدّ بعد.",
+ asstT:"المساعد",asstS:"يكتب الخطابات والرسائل من بيانات هذا الزبون",
+ asstAsk:"ماذا تريدني أن أكتب؟",asstPh:"مثال: خطاب إنهاء، حق الرجوع، عرض تجديد…",
+ gen:"إنشاء",print:"طباعة",asMail:"فتح كبريد",result:"النتيجة",
+ k:{kuendigung:"خطاب إنهاء",widerruf:"حق الرجوع (14 يوماً)",sonderkuendigung:"إنهاء استثنائي",
+    umzug:"إبلاغ بالانتقال",verlaengerung:"عرض تجديد",crossselling:"عرض خدمة إضافية",
+    unterlagen:"طلب مستندات"},
+ servT:"الخدمات",addSrvT:"إضافة",sendersT:"عناوين الإرسال",defA:"افتراضي",
+ setDef:"اجعله افتراضياً",companyT:"بيانات الشركة",leadT:"التذكير الافتراضي (أيام)",
+ protectT:"الموظف يرى زبائنه فقط",digestT:"ملخص يومي بالبريد"}
 };
 function t(){return T[L]}
 var SERVICES=['electricity','gas','internet','mobile','kfz','health','liability','home','legal','other'];
@@ -199,9 +265,14 @@ function renderAuth(mode){
       (m==='signup'?'<div style="font-size:11.5px;color:var(--tx3);margin-top:4px">'+d.pwHint+'</div>':'')+'</div>'+
     '<button class="btn btn-p" style="width:100%;margin-top:6px" onclick="doAuth(\''+m+'\')">'+
       (m==='signup'?d.signup:d.login)+'</button>'+
+    (m==='login'?'<div class="fld" id="codeWrap" style="display:none"><label>'+d.code2fa+
+      '</label><input id="a_code" dir="ltr" inputmode="numeric"></div>':'')+
     '<div style="text-align:center;margin-top:14px">'+
       '<button style="font-size:12.5px;color:var(--acc)" onclick="renderAuth(\''+
         (m==='signup'?'login':'signup')+'\')">'+(m==='signup'?d.toLogin:d.toSignup)+'</button></div>'+
+    (m==='login'?'<div style="text-align:center;margin-top:8px">'+
+      '<button style="font-size:12px;color:var(--tx3)" onclick="doForgot()">'+d.forgot+
+      '</button></div>':'')+
     '<div style="text-align:center;margin-top:10px">'+
       '<button style="font-size:12px;color:var(--tx3)" onclick="switchLang()">'+d.other+'</button></div>'+
     '</div>';
@@ -215,10 +286,35 @@ async function doAuth(mode){
       await api('/auth/signup',{method:'POST',body:{
         company:val('s_company'),name:val('s_name'),email:val('a_email'),password:val('a_pw')}});
     } else {
-      await api('/auth/login',{method:'POST',body:{email:val('a_email'),password:val('a_pw')}});
+      await api('/auth/login',{method:'POST',body:{
+        email:val('a_email'), password:val('a_pw'), code:val('a_code')}});
     }
     await boot();
-  }catch(e){ toast(d.err+': '+e.message) }
+  }catch(e){
+    if(e.message==='totp_required'||e.message==='bad_code'){
+      var w=$('codeWrap'); if(w){ w.style.display='block'; $('a_code').focus() }
+      toast(d.code2fa);
+    } else toast(d.err+': '+e.message);
+  }
+}
+async function doForgot(){
+  var d=t();
+  await api('/auth/forgot',{method:'POST',body:{email:val('a_email')}}).catch(function(){});
+  toast(d.resetSent);
+}
+function renderReset(token){
+  var d=t();
+  $('app').style.display='none'; $('auth').style.display='flex';
+  $('auth').innerHTML='<div class="lbox"><img src="/logo.png" alt="">'+
+   '<p style="text-align:center;color:var(--tx2);font-size:13px;margin-bottom:18px">'+d.resetT+'</p>'+
+   '<div class="fld"><label>'+d.pw+'</label><input id="rs_pw" type="password" dir="ltr">'+
+   '<div style="font-size:11.5px;color:var(--tx3);margin-top:4px">'+d.pwHint+'</div></div>'+
+   '<button class="btn btn-p" style="width:100%" onclick="doReset(\''+token+'\')">'+d.save+'</button></div>';
+}
+async function doReset(token){
+  try{ await api('/auth/reset',{method:'POST',body:{token:token,password:val('rs_pw')}});
+    history.replaceState({},'','/'); await boot();
+  }catch(e){ toast(t().err+': '+e.message) }
 }
 async function logout(){ await api('/auth/logout',{method:'POST'}); ME=null; renderAuth() }
 function switchLang(){ L = L==='de'?'ar':'de'; localStorage.setItem('vm_lang',L); applyDir();
@@ -242,23 +338,25 @@ async function render(){
   $('outBtn').textContent = d.logout; $('outBtn').onclick = logout;
 
   var s = CACHE.stats = await api('/stats').catch(function(){return{}});
-  var items = [['dash', (s.urgent||0)+(s.followups||0)], ['cust',0], ['docs',0],
-               ['ops', (s.unconfirmed||0)]];
-  var admin = isOwner() ? [['team',0],['set',0]] : [['set',0]];
+  var items = [['dash', (s.urgent||0)+(s.followups||0)], ['cust',0], ['inbox',0], ['docs',0],
+               ['ops', (s.unconfirmed||0)], ['camp',0]];
+  var admin = isOwner() ? [['rep',0],['team',0],['bill',0],['set',0]] : [['set',0]];
   $('nav').innerHTML =
     '<div class="ngrp">'+d.g1+'</div>'+
     items.map(navBtn).join('')+
     '<div class="ngrp">'+d.g2+'</div>'+
     admin.map(navBtn).join('');
 
-  var views = {dash:vDash, cust:vCust, cdet:vCdet, docs:vDocs, ops:vOps, team:vTeam, set:vSet, legal:vLegal};
+  var views = {dash:vDash, cust:vCust, cdet:vCdet, docs:vDocs, ops:vOps, team:vTeam,
+               set:vSet, legal:vLegal, camp:vCamp, inbox:vInbox, rep:vRep, bill:vBill};
   $('main').innerHTML = '<div class="empty">…</div>';
   $('main').innerHTML = await views[V]();
   cookieBanner();
 }
 function navBtn(k){
   var d=t(), on=(V===k[0])||(k[0]==='cust'&&V==='cdet');
-  return '<button class="'+(on?'on':'')+'" onclick="go(\''+k[0]+'\')"><span>'+d.nav[k[0]]+
+  var label = d.nav[k[0]] || d.nav2[k[0]] || k[0];
+  return '<button class="'+(on?'on':'')+'" onclick="go(\''+k[0]+'\')"><span>'+label+
     '</span>'+(k[1]?'<span class="pill num">'+k[1]+'</span>':'')+'</button>';
 }
 function go(v){ V=v; SEL=null; Q=''; TB='all'; closeM(); render() }
@@ -379,6 +477,7 @@ async function vCdet(){
    '<h1 style="margin-top:10px">'+esc(u.first_name+' '+u.last_name)+'</h1>'+
    '<div class="sub num">'+esc(u.phone||'')+(u.email?' · '+esc(u.email):'')+'</div></div>'+
    '<div style="display:flex;gap:7px;flex-wrap:wrap">'+
+   '<button class="btn btn-p" onclick="ASST=null;openAssistant()">'+d.asstT+'</button>'+
    '<button class="btn" onclick="formMove()">'+d.moveT+'</button>'+
    '<button class="btn" onclick="formContact()">'+d.editC+'</button>'+
    '<button class="btn btn-p" onclick="formContract(\''+u.id+'\')">'+d.addC+'</button></div></div>'+
@@ -559,7 +658,7 @@ async function saveFup(){
 /* ---------------- archive contract + extraction ---------------- */
 var UPLOAD = null;
 function formContract(customerId){
-  var d=t(); UPLOAD=null;
+  var d=t(); UPLOAD=null; window._fromMail=null;
   var cust = customerId && CACHE.cust && CACHE.cust.customer.id===customerId ? CACHE.cust.customer : null;
   showM('<div class="mod wide"><h3>'+d.archT+'</h3><p>'+d.archS+'</p>'+
    '<input type="file" id="fileIn" accept=".pdf,.png,.jpg,.jpeg,.webp,.txt" style="display:none" onchange="readFile(this)">'+
@@ -747,11 +846,14 @@ async function saveContract(customerId){
       var doc = await api('/documents',{method:'POST',body:fd});
       docId = doc.id;
     }
-    await api('/contracts',{method:'POST',body:{
+    var body = {
       customer_id:cid, service_type:val('c1'), provider_name:val('c2'),
       contract_number:val('c9'), signed_date:val('c7'), start_date:val('c3'),
       end_date:val('c4'), notice_period_days:parseInt(val('c5'),10),
-      reminder_lead_days:parseInt(val('c6'),10), source_document_id:docId }});
+      reminder_lead_days:parseInt(val('c6'),10), source_document_id:docId };
+    if(window._fromMail){ body.inbox_message_id = window._fromMail }
+    await api('/contracts',{method:'POST',body:body});
+    window._fromMail = null; MAILS = [];
     closeM(); toast(d.added); SEL=cid; V='cdet'; render();
   }catch(e){
     toast(e.message==='customer_limit_reached' ? d.limitCust : d.err+': '+e.message);
@@ -906,21 +1008,53 @@ async function doHandover(){
 /* ---------------- settings ---------------- */
 async function vSet(){
   var d=t();
+  var st = await api('/settings');
+  CACHE.settings = st;
   if(!isOwner())
     return '<div class="head"><div><h1>'+d.setT+'</h1></div></div>'+
-      '<div class="panel" style="padding:16px">'+
+      '<div class="panel" style="padding:18px">'+
       '<div class="kv"><span>'+d.mail+'</span><span class="num">'+esc(ME.email)+'</span></div>'+
       '<div class="kv"><span>'+d.teamT+'</span><span>'+d.agent+'</span></div></div>'+
-      '<div class="trial">'+d.ownOnly+'</div>';
+      panel(d.twofa,'', '<div style="padding:16px 18px">'+
+        '<button class="btn" onclick="setup2fa()">'+d.enable+'</button></div>');
+
   var dups = await api('/duplicates');
   var log = await api('/access-log');
-  var u = ME.usage||{};
+  var tn = st.tenant;
   return '<div class="head"><div><h1>'+d.setT+'</h1></div></div>'+
-   '<div class="panel" style="padding:16px;max-width:420px">'+
-   '<div style="font-size:12px;color:var(--tx2);margin-bottom:9px">'+d.usage+'</div>'+
-   '<div class="kv"><span>'+d.custs+'</span><span class="num">'+(u.customers||0)+' / '+ME.maxCustomers+'</span></div>'+
-   '<div class="kv"><span>'+d.seats+'</span><span class="num">'+(u.seats||0)+' / '+ME.maxSeats+'</span></div>'+
-   '<div class="kv"><span>Plan</span><span>'+esc(ME.plan)+'</span></div></div>'+
+   '<div class="grid2"><div>'+
+   panel(d.companyT,'', '<div style="padding:16px 18px">'+
+     fld(d.company,'sg_name')+fld(d.street,'sg_street')+
+     '<div class="grid2">'+fld(d.plz,'sg_plz','ltr')+fld(d.city,'sg_city')+'</div>'+
+     fld(d.phone,'sg_phone','ltr')+
+     fld(d.leadT,'sg_lead','ltr','number')+
+     '<label style="display:flex;align-items:center;gap:9px;margin:10px 0;cursor:pointer;font-size:13px">'+
+     '<input type="checkbox" id="sg_prot" style="width:auto"'+(tn.restrict_agents?' checked':'')+'> '+
+     d.protectT+'</label>'+
+     '<label style="display:flex;align-items:center;gap:9px;margin-bottom:12px;cursor:pointer;font-size:13px">'+
+     '<input type="checkbox" id="sg_dig" style="width:auto"'+(tn.digest_enabled?' checked':'')+'> '+
+     d.digestT+'</label>'+
+     '<button class="btn btn-p" style="width:100%" onclick="saveSettings()">'+d.save+'</button></div>')+
+   panel(d.servT,'', '<div style="padding:14px 18px;display:flex;gap:6px;flex-wrap:wrap">'+
+     (tn.services||[]).map(function(x,i){
+       return '<span class="tag t-blue" style="display:inline-flex;align-items:center;gap:6px">'+
+        (d.srv[x]||x)+'<button class="xb" style="width:17px;height:17px;border:none;background:transparent"'+
+        ' onclick="delService('+i+')">✕</button></span>' }).join('')+'</div>'+
+     '<div style="padding:0 18px 16px;display:flex;gap:7px">'+
+     '<input id="sv_new" placeholder="'+d.addSrvT+'" style="flex:1">'+
+     '<button class="btn btn-sm" onclick="addService()">+</button></div>')+
+   panel(d.twofa,'', '<div style="padding:16px 18px">'+
+     '<button class="btn" onclick="setup2fa()">'+d.enable+'</button>'+
+     '<button class="btn" style="margin-inline-start:8px" onclick="off2fa()">'+d.disable+'</button></div>')+
+   '</div><div>'+
+   panel(d.sendersT,'', (st.senders.length ? st.senders.map(function(x){
+      return '<div class="row"><div class="info"><b class="num">'+esc(x.email)+'</b></div>'+
+       (x.is_default?'<span class="tag t-grn">'+d.defA+'</span>'
+         :'<button class="btn btn-sm" onclick="defSender(\''+x.id+'\')">'+d.setDef+'</button>')+
+       '<button class="xb" onclick="delSender(\''+x.id+'\')">✕</button></div>' }).join('') : '')+
+     '<div style="padding:14px 18px;display:flex;gap:7px">'+
+     '<input id="sn_new" dir="ltr" placeholder="name@firma.de" style="flex:1">'+
+     '<button class="btn btn-sm" onclick="addSender()">+</button></div>')+
    panel(d.dupT,'', dups.length ? dups.map(function(x){
      return '<div class="row"><div class="info"><b>'+esc(x.a_fn+' '+x.a_ln)+' ↔ '+esc(x.b_fn+' '+x.b_ln)+
       '</b><small class="num">'+esc(x.a_phone||'—')+' · '+esc(x.b_phone||'—')+'</small></div>'+
@@ -930,8 +1064,50 @@ async function vSet(){
      return '<div class="log"><b>'+esc(x.user_name||'—')+' — '+esc(x.action)+
       ' (<span class="num">'+(x.row_count||0)+'</span>)</b>'+
       '<small class="num">'+new Date(x.created_at).toLocaleString()+'</small></div>'
-    }).join('') : '<div class="empty">—</div>');
+    }).join('') : '<div class="empty">—</div>')+
+   '</div></div>';
 }
+async function saveSettings(){
+  await api('/settings',{method:'PATCH',body:{
+    company_name:val('sg_name'), street:val('sg_street'), postal_code:val('sg_plz'),
+    city:val('sg_city'), phone:val('sg_phone'),
+    default_lead_days:parseInt(val('sg_lead'),10)||90,
+    restrict_agents:$('sg_prot').checked, digest_enabled:$('sg_dig').checked}});
+  ME = await api('/auth/me'); toast(t().saved); render();
+}
+async function addService(){
+  var v=val('sv_new').trim(); if(!v) return;
+  var list=(CACHE.settings.tenant.services||[]).concat([v]);
+  await api('/settings',{method:'PATCH',body:{services:list}}); toast(t().added); render();
+}
+async function delService(i){
+  var list=(CACHE.settings.tenant.services||[]).slice(); list.splice(i,1);
+  if(!list.length) return;
+  await api('/settings',{method:'PATCH',body:{services:list}}); render();
+}
+async function addSender(){
+  var v=val('sn_new').trim(); if(!v) return;
+  await api('/settings/senders',{method:'POST',body:{email:v}}); toast(t().added); render();
+}
+async function defSender(id){ await api('/settings/senders/'+id+'/default',{method:'POST'}); render() }
+async function delSender(id){ await api('/settings/senders/'+id,{method:'DELETE'}); render() }
+async function setup2fa(){
+  var d=t();
+  var r = await api('/auth/totp/setup',{method:'POST'});
+  showM('<div class="mod"><h3>'+d.twofa+'</h3><p>'+d.scan+'</p>'+
+   '<div class="calc" style="word-break:break-all;font-family:monospace;font-size:12.5px">'+
+   esc(r.secret)+'</div>'+
+   '<div class="fld" style="margin-top:12px"><label>'+d.code2fa+'</label>'+
+   '<input id="tf_code" dir="ltr" inputmode="numeric"></div>'+
+   '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeM()">'+d.cancel+
+   '</button><button class="btn btn-p" style="flex:1" onclick="enable2fa()">'+d.enable+'</button></div></div>');
+}
+async function enable2fa(){
+  try{ await api('/auth/totp/enable',{method:'POST',body:{code:val('tf_code')}});
+    closeM(); toast(t().twofaOn) }
+  catch(e){ toast(t().err) }
+}
+async function off2fa(){ await api('/auth/totp/disable',{method:'POST'}); toast(t().twofaOff) }
 
 /* ---------------- legal + cookies ---------------- */
 var LTAB='imp';
@@ -1023,6 +1199,8 @@ async function start(){
   applyDir();
   var m = location.pathname.match(/^\/invite\/([a-f0-9]+)$/i);
   if(m){ return renderInvite(m[1]) }
+  var rs = location.pathname.match(/^\/reset\/([a-f0-9]+)$/i);
+  if(rs){ return renderReset(rs[1]) }
   try{ await boot() }catch(e){ renderAuth() }
 }
 function renderInvite(token){
@@ -1040,3 +1218,307 @@ async function acceptInvite(token){
   }catch(e){ toast(t().err+': '+e.message) }
 }
 start();
+
+/* ---------------- campaigns ---------------- */
+var CS = {channel:'whatsapp', category:'utility', seg:'a', service:'gas', provider:'', limit:50};
+async function vCamp(){
+  var d=t();
+  var provs = await api('/contracts/providers');
+  if(!CS.provider && provs[0]) CS.provider = provs[0].name;
+  var seg = CS.seg==='a' ? {type:'missing_service', service:CS.service}
+          : CS.seg==='b' ? {type:'provider', provider:CS.provider}
+          : {type:'expiring'};
+  var pv = await api('/campaigns/preview',{method:'POST',body:{
+    channel:CS.channel, category:CS.category, segment:seg, daily_limit:CS.limit}});
+  var list = await api('/campaigns');
+  var msg = d.tpl.replace('{n}','{name}').replace('{s}',d.srv[CS.service])
+    .replace('{p}','—').replace('{e}','—').replace('{d}','—');
+  return '<div class="head"><div><h1>'+d.campT+'</h1><div class="sub">'+d.optOutT+'</div></div></div>'+
+   '<div class="cards">'+
+   card(d.dlim, pv.daily_limit, '', '')+
+   card(d.recip, pv.total, 'var(--acc)', '')+
+   card(d.excl, pv.excluded, 'var(--org)', '')+
+   card(d.daysN.replace('{n}',''), pv.days, '', '')+'</div>'+
+   '<div class="grid3"><div class="panel" style="padding:18px">'+
+   '<h2 style="font-size:14px;font-weight:600;margin-bottom:14px">'+d.newCamp+'</h2>'+
+   '<div class="grid2">'+
+   sel(d.chan,'cs_ch',[['whatsapp','WhatsApp'],['email',d.em]],CS.channel,"CS.channel=this.value;render()")+
+   sel(d.catT,'cs_cat',[['utility',d.catU],['marketing',d.catM]],CS.category,"CS.category=this.value;render()")+
+   '</div>'+
+   sel(d.segT,'cs_seg',[['a',d.segA],['b',d.segB],['c',d.segC]],CS.seg,"CS.seg=this.value;render()")+
+   (CS.seg==='a' ? sel(d.fSrv,'cs_srv',SERVICES.map(function(x){return [x,d.srv[x]]}),CS.service,
+       "CS.service=this.value;render()") : '')+
+   (CS.seg==='b' ? sel(d.fProv,'cs_prov',provs.map(function(p){return [p.name,p.name+' ('+p.n+')']}),
+       CS.provider,"CS.provider=this.value;render()") : '')+
+   '<div class="fld"><label>'+d.msgT+'</label><textarea id="cs_msg" rows="4">'+esc(msg)+'</textarea></div>'+
+   '<div class="fld"><label>'+d.dlim+'</label><input type="number" dir="ltr" value="'+CS.limit+
+     '" onchange="CS.limit=parseInt(this.value,10)||50;render()"></div>'+
+   (CS.channel==='whatsapp'?'<div class="trial">'+d.waNote+'</div>':'')+
+   '<button class="btn btn-p" style="width:100%"'+(pv.total?'':' disabled')+
+     ' onclick="createCampaign()">'+d.sendNow+'</button></div>'+
+   '<div>'+panel(d.recip,'', pv.sample.length ? pv.sample.map(function(x){
+      return '<div class="row"><div class="av">'+ini(x.name,x.name.split(' ')[1]||'')+'</div>'+
+       '<div class="info"><b>'+esc(x.name)+'</b><small class="num">'+esc(x.target||'')+
+       '</small></div></div>' }).join('') : '<div class="empty">'+d.noRes+'</div>')+
+   panel(d.campT,'', list.length ? list.map(function(c){
+      var pct = c.total_count ? Math.round(c.sent_count/c.total_count*100) : 0;
+      return '<div style="padding:13px 18px;border-bottom:1px solid var(--line)">'+
+       '<div style="display:flex;justify-content:space-between;gap:8px">'+
+       '<b style="font-size:13.5px">'+esc(c.name)+'</b><span class="tag '+
+       (c.status==='completed'?'t-grn':c.status==='paused'?'t-red':'t-org')+'">'+
+       (c.status==='completed'?d.doneT:c.status==='paused'?d.pausedT:d.runT)+'</span></div>'+
+       '<small style="color:var(--tx2);font-size:12px">'+(c.channel==='email'?d.em:'WhatsApp')+
+       ' · <span class="num">'+c.sent_count+'/'+c.total_count+'</span> '+d.sentT+'</small>'+
+       '<div class="bar" style="height:6px;background:#eaecf0;border-radius:20px;margin-top:6px">'+
+       '<div style="height:100%;width:'+pct+'%;background:var(--acc);border-radius:20px"></div></div>'+
+       (c.pending?'<button class="btn btn-sm" style="margin-top:8px" onclick="runCampaign(\''+c.id+
+         '\')">'+d.sendNow+'</button>':'')+'</div>' }).join('') : '<div class="empty">—</div>')+
+   '</div></div>';
+}
+function sel(label,id,opts,cur,onchange){
+  return '<div class="fld"><label>'+label+'</label><select id="'+id+'" onchange="'+onchange+'">'+
+    opts.map(function(o){return '<option value="'+esc(o[0])+'"'+(o[0]===cur?' selected':'')+'>'+
+      esc(o[1])+'</option>'}).join('')+'</select></div>';
+}
+async function createCampaign(){
+  var d=t();
+  var seg = CS.seg==='a' ? {type:'missing_service', service:CS.service}
+          : CS.seg==='b' ? {type:'provider', provider:CS.provider}
+          : {type:'expiring'};
+  try{
+    var c = await api('/campaigns',{method:'POST',body:{
+      name: CS.seg==='b' ? CS.provider : d.srv[CS.service],
+      channel:CS.channel, category:CS.category, segment:seg,
+      message_body:val('cs_msg'), daily_limit:CS.limit}});
+    await runCampaign(c.id);
+  }catch(e){ toast(d.err+': '+e.message) }
+}
+async function runCampaign(id){
+  var d=t();
+  var r = await api('/campaigns/'+id+'/run',{method:'POST'});
+  toast(r.auto_paused ? d.autoPause : (r.sent+' '+d.sentT));
+  render();
+}
+
+/* ---------------- inbox ---------------- */
+async function vInbox(){
+  var d=t();
+  var st = await api('/settings');
+  if(!st.mail_account){
+    return '<div class="head"><div><h1>'+d.inboxT+'</h1><div class="sub">'+d.connS+'</div></div></div>'+
+      '<div class="panel"><div class="empty" style="padding:46px 20px">'+d.notConn+'<br><br>'+
+      '<button class="btn btn-p" onclick="formConnect()">'+d.conn+'</button></div></div>';
+  }
+  var msgs = await api('/inbox');
+  var sugg = msgs.filter(function(m){ return m.state==='new' && m.has_attachment });
+  return '<div class="head"><div><h1>'+d.inboxT+'</h1>'+
+   '<div class="sub num">'+esc(st.mail_account.email)+'</div></div>'+
+   '<div style="display:flex;gap:7px"><button class="btn" onclick="disconnectMail()">'+d.disc+'</button>'+
+   '<button class="btn btn-p" onclick="syncMail()">'+d.syncT+'</button></div></div>'+
+   (sugg.length ? panel(d.suggT, d.suggS, sugg.map(function(m){
+     return '<div class="row"><div class="av">'+esc((m.from_name||m.from_email||'?').slice(0,2).toUpperCase())+
+      '</div><div class="info"><b>'+esc(m.attachment_name||m.subject)+'</b>'+
+      '<small>'+esc(m.from_name||m.from_email)+' · '+
+      (m.customer_id ? d.matchedT+': '+esc((m.first_name||'')+' '+(m.last_name||'')) : d.unmatchedT)+
+      '</small></div>'+
+      '<button class="btn btn-sm btn-p" onclick="archiveFromMail(\''+m.id+'\')">'+d.archiveIt+'</button>'+
+      '<button class="btn btn-sm" onclick="ignoreMail(\''+m.id+'\')">'+d.ignoreIt+'</button></div>'
+    }).join('')) : '')+
+   panel(d.inboxT,'', msgs.length ? msgs.map(function(m){
+     return '<div class="row"><div class="info" onclick="viewMail(\''+m.id+'\')">'+
+      '<b>'+esc(m.from_name||m.from_email||'')+'</b><small>'+esc(m.subject||'')+'</small></div>'+
+      (m.has_attachment?'<span class="tag t-gry">'+d.docsT+'</span>':'')+
+      '<small style="color:var(--tx3);font-size:11.5px" class="num">'+fmt(m.received_at)+'</small></div>'
+    }).join('') : '<div class="empty">'+d.noRes+'</div>');
+}
+var MAILS = [];
+async function viewMail(id){
+  var d=t();
+  MAILS = MAILS.length ? MAILS : await api('/inbox');
+  var m = MAILS.filter(function(x){return x.id===id})[0];
+  if(!m){ MAILS = await api('/inbox'); m = MAILS.filter(function(x){return x.id===id})[0] }
+  if(!m) return;
+  showM('<div class="mod wide"><h3 style="word-break:break-word">'+esc(m.subject||'')+'</h3>'+
+   '<p class="num">'+esc(m.from_email||'')+'</p>'+
+   '<div style="white-space:pre-wrap;font-size:13px;line-height:1.7;max-height:46vh;overflow:auto;'+
+   'background:#f7f8fa;border-radius:10px;padding:14px">'+esc((m.body_text||'').slice(0,8000))+'</div>'+
+   '<div style="display:flex;gap:8px;margin-top:14px">'+
+   '<button class="btn" style="flex:1" onclick="closeM()">'+d.cancel+'</button>'+
+   (m.has_attachment?'<button class="btn btn-p" style="flex:1" onclick="archiveFromMail(\''+m.id+
+     '\')">'+d.archiveIt+'</button>':'')+'</div></div>');
+}
+async function syncMail(){
+  var d=t(); toast(d.reading);
+  try{ var r = await api('/inbox/sync',{method:'POST'});
+    MAILS=[]; toast(d.imported.replace('{n}', r.imported)); render();
+  }catch(e){ toast(d.err+': '+e.message) }
+}
+async function ignoreMail(id){ await api('/inbox/'+id+'/ignore',{method:'POST'}); MAILS=[]; render() }
+async function archiveFromMail(id){
+  MAILS = await api('/inbox');
+  var m = MAILS.filter(function(x){return x.id===id})[0]; if(!m) return;
+  closeM();
+  formContract(m.customer_id || null);
+  setTimeout(function(){
+    var p = parseDE(m.body_text||'');
+    applyParsed(p);
+    dzState('ok', m.attachment_name || m.subject || '—', t().dzOk);
+    UPLOAD = null;
+    window._fromMail = m.id;
+    calcDeadline();
+  }, 60);
+}
+function formConnect(){
+  var d=t();
+  api('/inbox/presets').then(function(P){
+    showM('<div class="mod"><h3>'+d.connT+'</h3><p>'+d.connS+'</p>'+
+     '<div class="fld"><label>'+d.preset+'</label><select onchange="applyPreset(this.value)">'+
+     '<option value="">—</option>'+Object.keys(P).map(function(k){return '<option>'+k+'</option>'}).join('')+
+     '</select></div>'+
+     fld(d.mail,'ic_email','ltr')+
+     '<div class="grid2">'+fld(d.imapH,'ic_imap','ltr')+fld(d.portL,'ic_ip','ltr')+
+     fld(d.smtpH,'ic_smtp','ltr')+fld(d.portL,'ic_sp','ltr')+'</div>'+
+     '<div class="fld"><label>'+d.appPw+'</label><input id="ic_pw" type="password" dir="ltr"></div>'+
+     '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeM()">'+d.cancel+
+     '</button><button class="btn btn-p" style="flex:1" onclick="doConnect()">'+d.conn+'</button></div></div>');
+    window._presets = P;
+    setv('ic_ip','993'); setv('ic_sp','465');
+  });
+}
+function applyPreset(k){
+  var p = window._presets && window._presets[k]; if(!p) return;
+  setv('ic_imap',p[0]); setv('ic_ip',p[1]); setv('ic_smtp',p[2]); setv('ic_sp',p[3]);
+}
+async function doConnect(){
+  try{
+    await api('/inbox/connect',{method:'POST',body:{
+      email:val('ic_email'), imap_host:val('ic_imap'), imap_port:parseInt(val('ic_ip'),10),
+      smtp_host:val('ic_smtp'), smtp_port:parseInt(val('ic_sp'),10), password:val('ic_pw')}});
+    closeM(); toast(t().saved); render();
+  }catch(e){ toast(t().err+': '+e.message) }
+}
+async function disconnectMail(){ await api('/inbox/connect',{method:'DELETE'}); render() }
+
+/* ---------------- assistant ---------------- */
+var ASST = null;
+function openAssistant(){
+  var d=t(), x=CACHE.cust;
+  var kinds = ['kuendigung','widerruf','sonderkuendigung','verlaengerung',
+               'crossselling','umzug','unterlagen'];
+  var contracts = x.contracts || [];
+  showM('<div class="mod wide"><h3>'+d.asstT+' — '+esc(x.customer.first_name+' '+x.customer.last_name)+
+   '</h3><p>'+d.asstS+'</p>'+
+   (contracts.length>1 ? '<div class="fld"><label>'+d.contracts+'</label><select id="as_con">'+
+     contracts.map(function(c){return '<option value="'+c.id+'">'+d.srv[c.service_type]+' · '+
+       esc(c.provider_name||'—')+'</option>'}).join('')+'</select></div>' : '')+
+   '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">'+
+   kinds.map(function(k){return '<button class="btn btn-sm" onclick="genLetter(\''+k+'\')">'+
+     d.k[k]+'</button>'}).join('')+'</div>'+
+   '<div style="display:flex;gap:7px;margin-bottom:12px">'+
+   '<input id="as_q" placeholder="'+d.asstPh+'" style="flex:1" '+
+   'onkeydown="if(event.key===\'Enter\')genLetter(null)">'+
+   '<button class="btn btn-p" onclick="genLetter(null)">'+d.gen+'</button></div>'+
+   '<div id="as_out">'+(ASST?asstOut():'<div class="empty">'+d.asstAsk+'</div>')+'</div>'+
+   '<button class="btn" style="width:100%;margin-top:10px" onclick="ASST=null;closeM()">'+
+   d.cancel+'</button></div>');
+}
+function asstOut(){
+  var d=t();
+  return '<div class="fld"><label>'+d.subj+'</label><input id="as_sub" value="'+esc(ASST.subject)+'"></div>'+
+   '<div class="fld"><label>'+d.result+'</label><textarea id="as_body" rows="12" '+
+   'style="font-family:ui-monospace,monospace;font-size:12.5px;line-height:1.6">'+esc(ASST.body)+
+   '</textarea></div><div style="display:flex;gap:7px">'+
+   '<button class="btn" style="flex:1" onclick="cp(val(\'as_body\'))">'+d.copy+'</button>'+
+   '<button class="btn" style="flex:1" onclick="printLetter()">'+d.print+'</button>'+
+   '<button class="btn btn-p" style="flex:1" onclick="mailLetter()">'+d.asMail+'</button></div>';
+}
+async function genLetter(kind){
+  var d=t();
+  try{
+    ASST = await api('/assistant/generate',{method:'POST',body:{
+      customer_id: CACHE.cust.customer.id,
+      contract_id: $('as_con') ? val('as_con') : null,
+      kind: kind, query: kind ? null : val('as_q')}});
+    $('as_out').innerHTML = asstOut();
+  }catch(e){ toast(e.message==='no_template' ? d.asstAsk : d.err+': '+e.message) }
+}
+function printLetter(){
+  var w=window.open('','_blank'); if(!w) return;
+  w.document.write('<pre style="font:14px/1.75 Arial;white-space:pre-wrap;padding:44px;max-width:720px">'+
+    esc(val('as_body'))+'</pre>');
+  w.document.close(); w.print();
+}
+function mailLetter(){
+  var u=CACHE.cust.customer;
+  window.open('mailto:'+(u.email||'')+'?subject='+encodeURIComponent(val('as_sub'))+
+    '&body='+encodeURIComponent(val('as_body')),'_blank');
+}
+
+/* ---------------- reports ---------------- */
+async function vRep(){
+  var d=t(), r = await api('/reports');
+  var maxS = Math.max.apply(null, r.byService.map(function(x){return x.n}).concat([1]));
+  var maxM = Math.max.apply(null, r.months.map(function(x){return x.n}).concat([1]));
+  function bars(rows, label, max){
+    return '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'+
+      rows.map(function(x){
+        var name = label ? label(x) : x.m;
+        return '<div style="display:flex;align-items:center;gap:10px">'+
+        '<div style="width:130px;font-size:12.5px;color:var(--tx2)">'+esc(name)+'</div>'+
+        '<div style="flex:1;height:24px;background:#f2f4f7;border-radius:6px;overflow:hidden">'+
+        '<div style="height:100%;width:'+Math.max(5,Math.round(x.n/max*100))+
+        '%;background:var(--acc)"></div></div>'+
+        '<div style="width:38px;text-align:end;font-size:12.5px;font-weight:600" class="num">'+
+        x.n+'</div></div>' }).join('')+'</div>';
+  }
+  return '<div class="head"><div><h1>'+d.repT+'</h1></div></div>'+
+   '<div class="cards">'+
+   card(d.qualT+': '+d.noEnd, r.quality.no_end, r.quality.no_end?'var(--red)':'', '')+
+   card(d.qualT+': '+d.noNotice, r.quality.no_notice, r.quality.no_notice?'var(--org)':'', '')+
+   card(d.noDocQ, r.quality.no_doc, r.quality.no_doc?'var(--org)':'', '')+
+   card(d.unpaidQ, r.quality.unpaid, '', '')+'</div>'+
+   '<div class="grid2">'+
+   panel(d.bySrv,'', bars(r.byService, function(x){return d.srv[x.service_type]||x.service_type}, maxS))+
+   panel(d.byAgent,'', '<div style="padding:16px 18px;display:flex;flex-direction:column;gap:9px">'+
+     r.byAgent.map(function(x){
+       return '<div style="display:flex;justify-content:space-between;font-size:13px">'+
+        '<span>'+esc(x.name)+'</span><span class="num">'+x.n+' · '+x.renewed+' '+
+        d.st.renewed+'</span></div>' }).join('')+'</div>')+
+   '</div>'+
+   panel(d.byMonth,'', r.months.length ? bars(r.months, null, maxM) : '<div class="empty">—</div>');
+}
+
+/* ---------------- billing ---------------- */
+async function vBill(){
+  var d=t(), p = await api('/billing/plans');
+  var names = Object.keys(p.plans);
+  return '<div class="head"><div><h1>'+d.billT+'</h1>'+
+   '<div class="sub">'+d.curPlan+': '+esc(ME.plan)+'</div></div>'+
+   (p.enabled?'<button class="btn" onclick="portal()">'+d.manage+'</button>':'')+'</div>'+
+   (p.enabled?'':'<div class="trial">'+d.billOff+'</div>')+
+   '<div class="panel" style="padding:18px;max-width:420px;margin-bottom:16px">'+
+   '<div class="kv"><span>'+d.custs+'</span><span class="num">'+
+     ((ME.usage&&ME.usage.customers)||0)+' / '+ME.maxCustomers+'</span></div>'+
+   '<div class="kv"><span>'+d.seats+'</span><span class="num">'+
+     ((ME.usage&&ME.usage.seats)||0)+' / '+ME.maxSeats+'</span></div></div>'+
+   '<div class="cards">'+names.map(function(n){
+     var pl=p.plans[n], cur = ME.plan===n;
+     return '<div class="mc" style="cursor:default'+(cur?';border:2px solid var(--acc)':'')+'">'+
+      '<div class="l" style="text-transform:capitalize;font-size:14px;font-weight:600;color:var(--tx)">'+
+      n+'</div><div class="v num">'+pl.price+' €<span style="font-size:13px;color:var(--tx2)"> /mo</span></div>'+
+      '<div style="font-size:12.5px;color:var(--tx2);margin:8px 0 12px">'+
+      '<span class="num">'+pl.customers+'</span> '+d.custs+' · <span class="num">'+pl.seats+'</span> '+
+      d.seats+'</div>'+
+      (cur?'<span class="tag t-blue">'+d.curPlan+'</span>'
+        :'<button class="btn btn-sm btn-p" style="width:100%"'+(p.enabled?'':' disabled')+
+         ' onclick="checkout(\''+n+'\')">'+d.choose+'</button>')+'</div>' }).join('')+'</div>';
+}
+async function checkout(plan){
+  try{ var r = await api('/billing/checkout',{method:'POST',body:{plan:plan}});
+    location.href = r.url;
+  }catch(e){ toast(t().billOff) }
+}
+async function portal(){
+  try{ var r = await api('/billing/portal',{method:'POST'}); location.href = r.url }
+  catch(e){ toast(t().billOff) }
+}

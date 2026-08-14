@@ -51,6 +51,11 @@ CREATE TABLE tenants (
   locale            text        NOT NULL DEFAULT 'de',
   restrict_agents   boolean     NOT NULL DEFAULT true,  -- agents see only own customers
   stripe_customer_id text,
+  stripe_subscription_id text,
+  current_period_end timestamptz,
+  services          text[] NOT NULL DEFAULT ARRAY['electricity','gas','internet','mobile',
+                      'kfz','health','liability','home','legal','other']::text[],
+  digest_enabled    boolean NOT NULL DEFAULT true,
   created_at        timestamptz NOT NULL DEFAULT now(),
   updated_at        timestamptz NOT NULL DEFAULT now()
 );
@@ -67,6 +72,10 @@ CREATE TABLE users (
   password_hash text,                            -- bcrypt, set by the application
   invite_token  text UNIQUE,
   invite_expires timestamptz,
+  reset_token   text UNIQUE,
+  reset_expires timestamptz,
+  totp_secret   text,
+  totp_enabled  boolean NOT NULL DEFAULT false,
   name          text NOT NULL,
   email         citext NOT NULL UNIQUE,
   role          user_role_t  NOT NULL DEFAULT 'agent',
@@ -336,6 +345,46 @@ CREATE TABLE whatsapp_accounts (
   created_at      timestamptz NOT NULL DEFAULT now()
 );
 
+
+-- ============================================================
+-- SENDER ADDRESSES — the e-mail addresses a broker writes from
+-- ============================================================
+
+CREATE TABLE sender_addresses (
+  id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id  uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  email      citext NOT NULL,
+  label      text,
+  is_default boolean NOT NULL DEFAULT false,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (tenant_id, email)
+);
+CREATE INDEX sender_addresses_tenant_idx ON sender_addresses (tenant_id);
+
+-- ============================================================
+-- INBOX — messages fetched from the connected mailbox
+-- ============================================================
+
+CREATE TABLE inbox_messages (
+  id           uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  tenant_id    uuid NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+  account_id   uuid REFERENCES mail_accounts(id) ON DELETE CASCADE,
+  uid          text,
+  from_email   text,
+  from_name    text,
+  subject      text,
+  body_text    text,
+  received_at  timestamptz,
+  has_attachment boolean NOT NULL DEFAULT false,
+  attachment_name text,
+  document_id  uuid REFERENCES documents(id) ON DELETE SET NULL,
+  customer_id  uuid REFERENCES customers(id) ON DELETE SET NULL,
+  state        text NOT NULL DEFAULT 'new',   -- new | archived | ignored
+  created_at   timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (account_id, uid)
+);
+CREATE INDEX inbox_tenant_idx ON inbox_messages (tenant_id, received_at DESC);
+
 -- ============================================================
 -- TRIGGERS
 -- ============================================================
@@ -399,7 +448,8 @@ DECLARE tbl text;
 BEGIN
   FOREACH tbl IN ARRAY ARRAY[
     'users','providers','customers','contracts','documents','activities',
-    'audit_log','access_log','campaigns','campaign_recipients','mail_accounts','whatsapp_accounts'
+    'audit_log','access_log','campaigns','campaign_recipients','mail_accounts',
+    'whatsapp_accounts','sender_addresses','inbox_messages'
   ] LOOP
     EXECUTE format('ALTER TABLE %I ENABLE ROW LEVEL SECURITY', tbl);
     EXECUTE format('ALTER TABLE %I FORCE ROW LEVEL SECURITY', tbl);
@@ -415,7 +465,22 @@ END $$;
 DROP POLICY providers_tenant_isolation ON providers;
 CREATE POLICY providers_tenant_isolation ON providers
   USING (tenant_id = current_tenant() OR tenant_id IS NULL)
-  WITH CHECK (tenant_id = current_tenant());
+  WITH CHECK (tenant_id = current_tenant() OR tenant_id IS NULL);
+
+-- users is NOT forced: Render provisions a single database role, and that
+-- role owns every object migrate.js creates — it is both the app's runtime
+-- connection AND the table owner. FORCE ROW LEVEL SECURITY applies RLS even
+-- to the owner, which silently breaks every SECURITY DEFINER auth_* function
+-- below (auth_find_user, auth_email_exists, auth_start_reset, ...): they run
+-- as that same owner role, so a forced policy hides the very row they exist
+-- to find, and login/signup/password-reset fail 100% of the time in
+-- production. Dropping FORCE here lets the owner (and hence those functions)
+-- see all rows on this one table; every app-code query against `users` that
+-- is NOT one of those pre-auth lookups has been given an explicit
+-- tenant_id filter alongside the RLS policy (see auth.routes.js,
+-- team.routes.js, reports.routes.js) so tenant isolation is preserved in
+-- practice even though Postgres itself no longer forces it on this table.
+ALTER TABLE users NO FORCE ROW LEVEL SECURITY;
 
 
 -- ============================================================
@@ -435,9 +500,11 @@ $$;
 
 CREATE OR REPLACE FUNCTION auth_find_user(p_email citext)
 RETURNS TABLE (id uuid, tenant_id uuid, role user_role_t,
-               status user_status_t, password_hash text)
+               status user_status_t, password_hash text,
+               totp_secret text, totp_enabled boolean)
 LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
-  SELECT u.id, u.tenant_id, u.role, u.status, u.password_hash
+  SELECT u.id, u.tenant_id, u.role, u.status, u.password_hash,
+         u.totp_secret, u.totp_enabled
     FROM users u WHERE u.email = p_email
 $$;
 
@@ -469,6 +536,66 @@ LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
          invite_token = NULL, invite_expires = NULL
    WHERE invite_token = p_token AND invite_expires > now()
   RETURNING users.id, users.tenant_id, users.role
+$$;
+
+
+CREATE OR REPLACE FUNCTION auth_start_reset(p_email citext, p_token text)
+RETURNS TABLE (id uuid, name text, email citext)
+LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE users SET reset_token = p_token, reset_expires = now() + interval '1 hour'
+   WHERE email = p_email AND status = 'active'
+  RETURNING users.id, users.name, users.email
+$$;
+
+CREATE OR REPLACE FUNCTION auth_finish_reset(p_token text, p_hash text)
+RETURNS TABLE (id uuid, tenant_id uuid, role user_role_t)
+LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  UPDATE users SET password_hash = p_hash, reset_token = NULL, reset_expires = NULL
+   WHERE reset_token = p_token AND reset_expires > now()
+  RETURNING users.id, users.tenant_id, users.role
+$$;
+
+CREATE OR REPLACE FUNCTION auth_totp(p_user_id uuid)
+RETURNS TABLE (totp_secret text, totp_enabled boolean)
+LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  SELECT u.totp_secret, u.totp_enabled FROM users u WHERE u.id = p_user_id
+$$;
+
+-- Daily job: flip contracts into renewal_due across ALL tenants.
+-- Runs as owner, therefore outside row level security, by design.
+CREATE OR REPLACE FUNCTION job_refresh_due()
+RETURNS integer
+LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
+DECLARE n integer;
+BEGIN
+  UPDATE contracts
+     SET status = 'renewal_due'
+   WHERE status = 'active'
+     AND reminder_muted = false
+     AND (cancel_deadline - CURRENT_DATE) <= reminder_lead_days;
+  GET DIAGNOSTICS n = ROW_COUNT;
+  UPDATE contracts SET status = 'expired'
+   WHERE status IN ('active','renewal_due','contacted') AND end_date < CURRENT_DATE - 30;
+  RETURN n;
+END $$;
+
+-- Per-tenant digest payload for the morning e-mail
+CREATE OR REPLACE FUNCTION job_digest()
+RETURNS TABLE (tenant_id uuid, company_name text, owner_email citext,
+               urgent integer, followups integer, unconfirmed integer)
+LANGUAGE sql SECURITY DEFINER SET search_path = public AS $$
+  SELECT t.id, t.company_name,
+         (SELECT u.email FROM users u
+           WHERE u.tenant_id = t.id AND u.role='owner' AND u.status='active' LIMIT 1),
+         (SELECT count(*)::int FROM contracts c WHERE c.tenant_id=t.id
+            AND c.status NOT IN ('renewed','lost','cancelled_early')
+            AND (c.cancel_deadline - CURRENT_DATE) <= 14),
+         (SELECT count(*)::int FROM contracts c WHERE c.tenant_id=t.id
+            AND c.follow_up_date IS NOT NULL AND c.follow_up_date <= CURRENT_DATE),
+         (SELECT count(*)::int FROM contracts c WHERE c.tenant_id=t.id
+            AND c.submission_status IN ('submitted','review','rejected'))
+    FROM tenants t
+   WHERE t.status IN ('trial','active') AND t.digest_enabled
 $$;
 
 -- ============================================================

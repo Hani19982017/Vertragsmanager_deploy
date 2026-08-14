@@ -9,7 +9,9 @@ router.get('/', asyncH(async (req, res) => {
   const r = await A.scope(req, (c) => c.query(
     `SELECT u.id, u.name, u.email, u.role, u.status, u.last_login_at,
             (SELECT count(*)::int FROM customers cu WHERE cu.assigned_user_id=u.id) AS customers
-       FROM users u WHERE u.status <> 'disabled' ORDER BY u.role, u.name`));
+       FROM users u
+      WHERE u.status <> 'disabled' AND u.tenant_id = current_setting('app.tenant_id')::uuid
+      ORDER BY u.role, u.name`));
   ok(res, r.rows);
 }));
 
@@ -19,7 +21,9 @@ router.post('/invite', A.requireOwner, asyncH(async (req, res) => {
   if (!email || !EMAIL.test(email)) return fail(res, 400, 'bad_email');
 
   const out = await A.scope(req, async (c) => {
-    const n = (await c.query("SELECT count(*)::int n FROM users WHERE status <> 'disabled'")).rows[0].n;
+    const n = (await c.query(
+      "SELECT count(*)::int n FROM users WHERE status <> 'disabled' AND tenant_id = current_setting('app.tenant_id')::uuid"
+    )).rows[0].n;
     if (n >= req.user.max_seats) return 'limit';
     const token = crypto.randomBytes(24).toString('hex');
     const r = await c.query(

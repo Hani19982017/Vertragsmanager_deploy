@@ -102,8 +102,13 @@ router.post('/', asyncH(async (req, res) => {
        int(b.consumption_kwh), b.assigned_user_id || req.user.id,
        b.source_document_id || null, req.user.id]);
     if (b.source_document_id) {
-      await c.query('UPDATE documents SET contract_id=$1 WHERE id=$2',
-        [r.rows[0].id, b.source_document_id]);
+      await c.query('UPDATE documents SET contract_id=$1, customer_id=coalesce(customer_id,$3) WHERE id=$2',
+        [r.rows[0].id, b.source_document_id, b.customer_id]);
+    }
+    if (b.inbox_message_id) {
+      await c.query(
+        "UPDATE inbox_messages SET state='archived', customer_id=$2 WHERE id=$1",
+        [b.inbox_message_id, b.customer_id]);
     }
     return r.rows[0];
   });

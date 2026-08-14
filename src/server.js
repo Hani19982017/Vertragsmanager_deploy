@@ -25,6 +25,10 @@ app.use(helmet({
   },
   crossOriginEmbedderPolicy: false
 }));
+// Stripe needs the raw body to verify its signature — mount before the JSON parser
+app.post('/api/billing/webhook', express.raw({ type: 'application/json' }),
+  require('./routes/billing.routes'));
+
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -37,6 +41,8 @@ const authLimiter = rateLimit({
   message: { error: 'too_many_attempts' }
 });
 app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/forgot', authLimiter);
+app.use('/api/auth/reset', authLimiter);
 app.use('/api/auth/signup', authLimiter);
 app.use('/api/team/accept', authLimiter);
 
@@ -45,6 +51,13 @@ app.use('/api/customers', require('./routes/customers.routes'));
 app.use('/api/contracts', require('./routes/contracts.routes'));
 app.use('/api/documents', require('./routes/documents.routes'));
 app.use('/api/team', require('./routes/team.routes'));
+app.use('/api/campaigns', require('./routes/campaigns.routes'));
+app.use('/api/assistant', require('./routes/assistant.routes'));
+app.use('/api/inbox', require('./routes/inbox.routes'));
+app.use('/api/settings', require('./routes/settings.routes'));
+app.use('/api/reports', require('./routes/reports.routes'));
+app.use('/api/billing', require('./routes/billing.routes'));
+app.use('/api/cron', require('./routes/cron.routes'));
 app.use('/api', require('./routes/misc.routes'));
 
 app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: '1h' }));
