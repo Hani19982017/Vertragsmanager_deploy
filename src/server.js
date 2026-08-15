@@ -15,6 +15,10 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com'],
+      // The UI wires all its buttons with inline on* handlers (onclick, etc.).
+      // helmet defaults script-src-attr to 'none', which silently blocks every
+      // one of them — so buttons render but do nothing. Allow inline handlers.
+      scriptSrcAttr: ["'unsafe-inline'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:', 'blob:'],
       connectSrc: ["'self'", 'https://cdnjs.cloudflare.com'],
