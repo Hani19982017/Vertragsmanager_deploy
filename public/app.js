@@ -692,9 +692,10 @@ function formContract(customerId){
   ['c4','c5'].forEach(function(id){ $(id).oninput = calcDeadline });
   calcDeadline();
 }
-function fld(label,id,dir,type){
+function fld(label,id,dir,type,value){
   return '<div class="fld"><label>'+label+'</label><input id="'+id+'"'+
-    (dir?' dir="'+dir+'"':'')+(type?' type="'+type+'"':'')+'></div>';
+    (dir?' dir="'+dir+'"':'')+(type?' type="'+type+'"':'')+
+    (value!==undefined&&value!==null?' value="'+esc(String(value))+'"':'')+'></div>';
 }
 function calcDeadline(){
   var e=val('c4'), n=parseInt(val('c5')||0,10);
@@ -1024,10 +1025,10 @@ async function vSet(){
   return '<div class="head"><div><h1>'+d.setT+'</h1></div></div>'+
    '<div class="grid2"><div>'+
    panel(d.companyT,'', '<div style="padding:16px 18px">'+
-     fld(d.company,'sg_name')+fld(d.street,'sg_street')+
-     '<div class="grid2">'+fld(d.plz,'sg_plz','ltr')+fld(d.city,'sg_city')+'</div>'+
-     fld(d.phone,'sg_phone','ltr')+
-     fld(d.leadT,'sg_lead','ltr','number')+
+     fld(d.company,'sg_name',null,null,tn.company_name)+fld(d.street,'sg_street',null,null,tn.street)+
+     '<div class="grid2">'+fld(d.plz,'sg_plz','ltr',null,tn.postal_code)+fld(d.city,'sg_city',null,null,tn.city)+'</div>'+
+     fld(d.phone,'sg_phone','ltr',null,tn.phone)+
+     fld(d.leadT,'sg_lead','ltr','number',tn.default_lead_days)+
      '<label style="display:flex;align-items:center;gap:9px;margin:10px 0;cursor:pointer;font-size:13px">'+
      '<input type="checkbox" id="sg_prot" style="width:auto"'+(tn.restrict_agents?' checked':'')+'> '+
      d.protectT+'</label>'+
@@ -1095,12 +1096,29 @@ async function setup2fa(){
   var d=t();
   var r = await api('/auth/totp/setup',{method:'POST'});
   showM('<div class="mod"><h3>'+d.twofa+'</h3><p>'+d.scan+'</p>'+
+   '<div id="tf_qr" style="display:flex;justify-content:center;margin:12px 0"></div>'+
    '<div class="calc" style="word-break:break-all;font-family:monospace;font-size:12.5px">'+
    esc(r.secret)+'</div>'+
    '<div class="fld" style="margin-top:12px"><label>'+d.code2fa+'</label>'+
    '<input id="tf_code" dir="ltr" inputmode="numeric"></div>'+
    '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeM()">'+d.cancel+
    '</button><button class="btn btn-p" style="flex:1" onclick="enable2fa()">'+d.enable+'</button></div></div>');
+  drawQR(r.otpauth);
+}
+function drawQR(otpauth){
+  if(!otpauth) return;
+  var box=$('tf_qr'); if(!box) return;
+  function make(){
+    try{
+      box.innerHTML='';
+      new QRCode(box,{text:otpauth,width:180,height:180,
+        colorDark:'#000',colorLight:'#fff'});
+    }catch(e){}
+  }
+  if(window.QRCode){ make(); return; }
+  var s=document.createElement('script');
+  s.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+  s.onload=make; document.head.appendChild(s);
 }
 async function enable2fa(){
   try{ await api('/auth/totp/enable',{method:'POST',body:{code:val('tf_code')}});
