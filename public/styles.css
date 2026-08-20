@@ -135,7 +135,8 @@ border-radius:14px;box-shadow:var(--shx);padding:18px 20px;max-width:640px;margi
     transform:translateX(-100%);transition:transform .25s ease;
     box-shadow:4px 0 24px rgba(0,0,0,.35)}
   html[dir=rtl] .side{transform:translateX(100%)}
-  .side.open{transform:translateX(0)}
+  /* .open must beat the RTL closed rule, so match its specificity */
+  .side.open,html[dir=rtl] .side.open{transform:translateX(0)}
   /* hamburger button, fixed top corner */
   .menuBtn{display:flex;align-items:center;justify-content:center;
     position:fixed;top:12px;inset-inline-start:12px;z-index:70;
