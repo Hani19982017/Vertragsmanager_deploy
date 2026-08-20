@@ -12,7 +12,9 @@
 <body>
 <div id="auth"></div>
 <div id="app" style="display:none"><div class="shell">
-  <aside class="side">
+  <button class="menuBtn" id="menuBtn" onclick="toggleNav()" aria-label="menu">☰</button>
+  <div class="side-ov" id="sideOv" onclick="closeNav()"></div>
+  <aside class="side" id="side">
     <img src="/logo.png" alt="Vertragsmanager">
     <nav class="nav" id="nav"></nav>
     <div class="side-foot">
