@@ -5,8 +5,8 @@ const { ok, fail, asyncH } = require('../util');
 
 const PLANS = {
   starter: { price: 39, customers: 100, seats: 1, env: 'STRIPE_PRICE_STARTER' },
-  growth:  { price: 69, customers: 200, seats: 3, env: 'STRIPE_PRICE_GROWTH' },
-  pro:     { price: 99, customers: 400, seats: 5, env: 'STRIPE_PRICE_PRO' }
+  growth:  { price: 69, customers: 300, seats: 3, env: 'STRIPE_PRICE_GROWTH' },
+  pro:     { price: 100, customers: 600, seats: 5, env: 'STRIPE_PRICE_PRO' }
 };
 const stripeEnabled = () => !!process.env.STRIPE_SECRET_KEY;
 const stripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
