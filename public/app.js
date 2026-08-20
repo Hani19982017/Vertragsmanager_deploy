@@ -359,7 +359,17 @@ function navBtn(k){
   return '<button class="'+(on?'on':'')+'" onclick="go(\''+k[0]+'\')"><span>'+label+
     '</span>'+(k[1]?'<span class="pill num">'+k[1]+'</span>':'')+'</button>';
 }
-function go(v){ V=v; SEL=null; Q=''; TB='all'; closeM(); render() }
+function go(v){ V=v; SEL=null; Q=''; TB='all'; closeM(); closeNav(); render() }
+function toggleNav(){
+  var s=$('side'), o=$('sideOv'); if(!s) return;
+  var open=s.classList.toggle('open');
+  if(o) o.classList.toggle('show', open);
+}
+function closeNav(){
+  var s=$('side'), o=$('sideOv');
+  if(s) s.classList.remove('open');
+  if(o) o.classList.remove('show');
+}
 function openC(id){ SEL=id; V='cdet'; closeM(); render() }
 
 function banner(){
