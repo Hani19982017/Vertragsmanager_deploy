@@ -126,4 +126,24 @@ border-radius:14px;box-shadow:var(--shx);padding:18px 20px;max-width:640px;margi
 .ck h4{font-size:14.5px;font-weight:600;margin-bottom:6px}
 .ck p{font-size:12.5px;color:var(--tx2);line-height:1.65;margin-bottom:13px}
 .ck .btns{display:flex;gap:8px;flex-wrap:wrap}.ck .btns .btn{flex:1;min-width:120px}
-@media(max-width:880px){.side{display:none}.main{padding:14px}.grid2,.grid3{grid-template-columns:1fr}}
+/* hamburger + overlay are hidden on desktop */
+.menuBtn{display:none}
+.side-ov{display:none}
+@media(max-width:880px){
+  /* turn the sidebar into an off-canvas drawer instead of hiding it */
+  .side{position:fixed;top:0;inset-inline-start:0;height:100vh;z-index:60;
+    transform:translateX(-100%);transition:transform .25s ease;
+    box-shadow:4px 0 24px rgba(0,0,0,.35)}
+  html[dir=rtl] .side{transform:translateX(100%)}
+  .side.open{transform:translateX(0)}
+  /* hamburger button, fixed top corner */
+  .menuBtn{display:flex;align-items:center;justify-content:center;
+    position:fixed;top:12px;inset-inline-start:12px;z-index:70;
+    width:42px;height:42px;border:none;border-radius:11px;cursor:pointer;
+    background:#12172a;color:#fff;font-size:20px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+  /* dark overlay behind the open drawer */
+  .side-ov.show{display:block;position:fixed;inset:0;z-index:55;
+    background:rgba(0,0,0,.45)}
+  .main{padding:64px 14px 14px}
+  .grid2,.grid3{grid-template-columns:1fr}
+}
