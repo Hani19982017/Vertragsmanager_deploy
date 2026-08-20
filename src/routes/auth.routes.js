@@ -4,6 +4,12 @@ const A = require('../auth');
 const crypto = require('crypto');
 const M = require('../mailer');
 const { authenticator } = require('otplib');
+// Allow +/- one 30s step of clock drift between the server and the user's
+// phone. With the default window of 0 a valid code fails whenever the two
+// clocks are even slightly out of sync, which shows up as "bad_code" on
+// otherwise-correct codes. window:1 accepts the current, previous and next
+// step (~30s tolerance either side) — the common production setting.
+authenticator.options = { window: 1 };
 const { ok, fail, asyncH, EMAIL, str } = require('../util');
 
 // POST /api/auth/signup — creates a tenant and its owner
