@@ -149,12 +149,29 @@ router.post('/totp/setup', A.requireAuth, asyncH(async (req, res) => {
 router.post('/totp/enable', A.requireAuth, asyncH(async (req, res) => {
   const r = await raw('SELECT * FROM auth_totp($1)', [req.user.id]);
   const sec = r.rows[0] && r.rows[0].totp_secret;
+
+  // --- 2FA diagnostics: logged to the Render logs to pinpoint failures ---
+  const sentCode = String(req.body.code || '');
+  let expectedNow = '(n/a)';
+  try { if (sec) expectedNow = authenticator.generate(sec); } catch (e) {}
+  console.log('[2FA/enable]',
+    'user=', req.user.email,
+    'secretPresent=', !!sec,
+    'sentCode=', JSON.stringify(sentCode),
+    'expectedNow=', expectedNow,
+    'window=', authenticator.options && authenticator.options.window,
+    'serverTimeUTC=', new Date().toISOString());
+  // ----------------------------------------------------------------------
+
   if (!sec) return fail(res, 400, 'not_set_up');
 
-  if (!authenticator.check(String(req.body.code || ''), sec))
+  if (!authenticator.check(sentCode, sec)) {
+    console.log('[2FA/enable] REJECTED: code did not match (bad_code) for', req.user.email);
     return fail(res, 400, 'bad_code');
+  }
   await A.scope(req, (c) =>
     c.query('UPDATE users SET totp_enabled=true WHERE id=$1', [req.user.id]));
+  console.log('[2FA/enable] SUCCESS for', req.user.email);
   ok(res);
 }));
 
