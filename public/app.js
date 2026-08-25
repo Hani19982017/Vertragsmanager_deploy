@@ -10,6 +10,9 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  login:"Anmelden",signup:"Konto erstellen",toSignup:"Neues Konto erstellen",toLogin:"Ich habe ein Konto",
  company:"Firmenname",name:"Ihr Name",email:"E-Mail",pw:"Passwort",pwHint:"Mindestens 8 Zeichen",
  logout:"Abmelden",other:"العربية",
+ fbLink:"Feedback senden",fbTitle:"Feedback / Vorschlag",
+ fbHint:"Anmerkungen oder Verbesserungsvorschläge an das Plattform-Team senden.",
+ fbSend:"Senden",fbOk:"Danke! Ihr Feedback wurde gesendet.",fbOff:"Feedback ist noch nicht eingerichtet.",
  g1:"Arbeit",g2:"Verwaltung",
  nav:{dash:"Übersicht",cust:"Kunden",docs:"Dokumente",ops:"Chancen",team:"Team",set:"Einstellungen"},
  m1:"Sofort kontaktieren",m2:"In 60 Tagen",m3:"Wiedervorlagen",m4:"Kunden",
@@ -120,6 +123,9 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  login:"تسجيل الدخول",signup:"إنشاء حساب",toSignup:"إنشاء حساب جديد",toLogin:"لدي حساب",
  company:"اسم الشركة",name:"اسمك",email:"البريد الإلكتروني",pw:"كلمة المرور",pwHint:"ثمانية أحرف على الأقل",
  logout:"خروج",other:"Deutsch",
+ fbLink:"إرسال ملاحظات",fbTitle:"ملاحظات / اقتراح",
+ fbHint:"أرسل ملاحظاتك أو اقتراحاتك لتطوير المنصة إلى فريق المنصة.",
+ fbSend:"إرسال",fbOk:"شكرًا! تم إرسال ملاحظتك.",fbOff:"خاصية الملاحظات غير مُعدّة بعد.",
  g1:"العمل",g2:"الإدارة",
  nav:{dash:"لوحة التحكم",cust:"الزبائن",docs:"الملفات",ops:"الفرص",team:"الفريق",set:"الإعدادات"},
  m1:"يحتاج تواصل الآن",m2:"خلال 60 يوماً",m3:"مواعيد المتابعة",m4:"الزبائن",
@@ -359,6 +365,7 @@ async function render(){
   $('company').textContent = ME.company;
   $('langBtn').textContent = d.other; $('langBtn').onclick = switchLang;
   $('outBtn').textContent = d.logout; $('outBtn').onclick = logout;
+  var fb=$('fbLink'); if(fb) fb.textContent = d.fbLink;
 
   var s = CACHE.stats = await api('/stats').catch(function(){return{}});
   var items = [['dash', (s.urgent||0)+(s.followups||0)], ['cust',0], ['inbox',0], ['docs',0],
@@ -1216,6 +1223,23 @@ async function off2fa(){ await api('/auth/totp/disable',{method:'POST'}); toast(
 /* ---------------- legal + cookies ---------------- */
 var LTAB='imp';
 function Legal(k){ LTAB=k; V='legal'; closeM(); render() }
+function feedbackModal(){
+  var d=t();
+  showM('<div class="mod"><h3>'+d.fbTitle+'</h3><p>'+d.fbHint+'</p>'+
+    '<div class="fld"><textarea id="fb_msg" rows="5" style="width:100%;resize:vertical"></textarea></div>'+
+    '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeM()">'+d.delCancel+
+    '</button><button class="btn btn-p" style="flex:1" onclick="sendFeedback()">'+d.fbSend+'</button></div></div>');
+}
+async function sendFeedback(){
+  var d=t(), msg=(val('fb_msg')||'').trim();
+  if(!msg) return;
+  try{
+    await api('/feedback',{method:'POST',body:{message:msg}});
+    closeM(); toast(d.fbOk);
+  }catch(e){
+    toast(e.message==='feedback_not_configured' ? d.fbOff : d.err);
+  }
+}
 function P(x){ return '<span class="phx">'+x+'</span>' }
 async function vLegal(){
   var d=t(), titles={imp:'Impressum',dsg:'Datenschutzerklärung',agb:'AGB'};
