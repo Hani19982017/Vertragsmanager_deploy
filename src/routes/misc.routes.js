@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const A = require('../auth');
+const { raw } = require('../db');
 const { ok, asyncH, csvCell } = require('../util');
 
 router.use(A.requireAuth);
@@ -75,6 +76,39 @@ router.get('/duplicates', A.requireOwner, asyncH(async (req, res) => {
           OR (lower(a.first_name)=lower(b.first_name) AND lower(a.last_name)=lower(b.last_name)))
       LIMIT 50`));
   ok(res, r.rows);
+}));
+
+// GET /api/dbsize — owner-only: current database size (just for info)
+router.get('/dbsize', A.requireOwner, asyncH(async (req, res) => {
+  const r = await raw(
+    `SELECT pg_database_size(current_database()) AS bytes,
+            pg_size_pretty(pg_database_size(current_database())) AS pretty`);
+  ok(res, { bytes: Number(r.rows[0].bytes), pretty: r.rows[0].pretty });
+}));
+
+// GET /api/storage — total storage this tenant uses: text rows + uploaded files
+router.get('/storage', asyncH(async (req, res) => {
+  const out = await A.scope(req, async (c) => {
+    // uploaded file bytes across all of this tenant's documents
+    const files = (await c.query(
+      `SELECT COALESCE(SUM(size_bytes),0)::bigint AS b FROM documents`)).rows[0].b;
+    // actual DB row sizes for this tenant's data
+    const text = (await c.query(
+      `SELECT
+         (SELECT COALESCE(SUM(pg_column_size(cu.*)),0) FROM customers cu) +
+         (SELECT COALESCE(SUM(pg_column_size(ct.*)),0) FROM contracts ct) +
+         (SELECT COALESCE(SUM(pg_column_size(a.*)),0)  FROM activities a) +
+         (SELECT COALESCE(SUM(pg_column_size(d.*)),0)  FROM documents d) AS b`)).rows[0].b;
+    const custCount = (await c.query(
+      `SELECT count(*)::int n FROM customers WHERE is_active`)).rows[0].n;
+    return {
+      files: Number(files),
+      text: Number(text),
+      total: Number(files) + Number(text),
+      customers: custCount
+    };
+  });
+  ok(res, out);
 }));
 
 module.exports = router;
