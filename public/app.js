@@ -43,7 +43,7 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  lostP:"Neuer Anbieter",dur:"Laufzeit (Monate)",
  fupT:"Wiedervorlage",fupS:"Wann sollen wir uns wieder melden?",fupD:"Datum",fupN:"Notiz",
  q3:"in 3 Tagen",q7:"in 1 Woche",q14:"in 2 Wochen",q30:"in 1 Monat",fupClear:"Löschen",
- contracts:"Verträge",activity:"Verlauf",docsT:"Dokumente",cross:"Cross-Selling",hh:"Gleiche Adresse",
+ contracts:"Verträge",activity:"Verlauf",docsT:"Dokumente",storageUsed:"Speicherplatz",txtData:"Text",filesData:"Dateien",totalStorT:"Gesamter Speicherplatz",allCustStor:"Alle Kunden",cross:"Cross-Selling",hh:"Gleiche Adresse",
  noDoc:"Keine Dokumente",noAct:"Noch keine Aktivität",noFile:"Kein Vertragsdokument hinterlegt",
  editC:"Kontaktdaten bearbeiten",moveT:"Umzug melden",
  moveS:"Ein Umzug beendet Strom- und Gasverträge sofort — und eröffnet neue.",
@@ -144,7 +144,7 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  lostP:"المزوّد الجديد",dur:"المدة (أشهر)",
  fupT:"موعد المتابعة",fupS:"متى نعاود التواصل؟",fupD:"التاريخ",fupN:"ملاحظة",
  q3:"بعد 3 أيام",q7:"بعد أسبوع",q14:"بعد أسبوعين",q30:"بعد شهر",fupClear:"حذف",
- contracts:"العقود",activity:"سجل التواصل",docsT:"الملفات",cross:"البيع المتقاطع",hh:"نفس العنوان",
+ contracts:"العقود",activity:"سجل التواصل",docsT:"الملفات",storageUsed:"المساحة المستخدمة",txtData:"نصوص",filesData:"ملفات",totalStorT:"إجمالي المساحة المستخدمة",allCustStor:"كل الزبائن",cross:"البيع المتقاطع",hh:"نفس العنوان",
  noDoc:"لا ملفات",noAct:"لا يوجد تواصل",noFile:"لا يوجد ملف عقد مرفق",
  editC:"تعديل بيانات التواصل",moveT:"تسجيل انتقال",
  moveS:"الانتقال يُنهي عقود الكهرباء والغاز فوراً — ويفتح عقوداً جديدة.",
@@ -222,6 +222,13 @@ function setv(id,v){var e=$(id);if(e&&v!=null&&v!=='')e.value=v}
 function iso(d){return new Date(d).toISOString().slice(0,10)}
 function addD(d,n){var x=new Date(d);x.setDate(x.getDate()+n);return x}
 function fmt(s){if(!s)return'—';var p=String(s).slice(0,10).split('-');return p[2]+'.'+p[1]+'.'+p[0]}
+function fmtBytes(n){
+  n = Number(n)||0;
+  if(n < 1024) return n+' B';
+  if(n < 1024*1024) return (n/1024).toFixed(1)+' KB';
+  if(n < 1024*1024*1024) return (n/1024/1024).toFixed(2)+' MB';
+  return (n/1024/1024/1024).toFixed(2)+' GB';
+}
 function digits(s){return String(s||'').replace(/[^0-9]/g,'')}
 function ini(a,b){return((a||'?')[0]+(b||'?')[0]).toUpperCase()}
 function urg(n){return n<=14?'d-red':n<=45?'d-org':'d-gry'}
@@ -497,10 +504,13 @@ async function vCdet(){
    panel(d.contracts,'', x.contracts.length
      ? x.contracts.map(function(c){ return detailContractRow(c, x.documents) }).join('')
      : '<div class="empty">'+d.noRes+'</div>')+
-   panel(d.docsT,'', x.documents.length
+   panel(d.docsT+' · '+d.storageUsed+': '+fmtBytes(x.storageBytes)+
+     ' ('+d.txtData+' '+fmtBytes(x.textBytes)+' + '+d.filesData+' '+fmtBytes(x.filesBytes)+')','',
+     x.documents.length
      ? x.documents.map(function(f){ return '<div class="row"><div class="info">'+
         '<b style="word-break:break-all"><a href="/api/documents/'+f.id+'/file" target="_blank">'+
-        esc(f.file_name)+'</a></b><small class="num">'+fmt(f.created_at)+'</small></div></div>' }).join('')
+        esc(f.file_name)+'</a></b><small class="num">'+fmt(f.created_at)+
+        ' · '+fmtBytes(f.size_bytes)+'</small></div></div>' }).join('')
      : '<div class="empty">'+d.noDoc+'</div>')+
    '</div><div>'+
    '<div class="panel" style="padding:16px">'+
@@ -1033,8 +1043,16 @@ async function vSet(){
 
   var dups = await api('/duplicates');
   var log = await api('/access-log');
+  var stor = await api('/storage');
   var tn = st.tenant;
   return '<div class="head"><div><h1>'+d.setT+'</h1></div></div>'+
+   '<div class="panel" style="padding:18px;margin-bottom:16px">'+
+     '<div class="kv"><span><b>'+d.totalStorT+'</b> ('+d.allCustStor+': '+
+       '<span class="num">'+stor.customers+'</span>)</span>'+
+       '<span class="num"><b>'+fmtBytes(stor.total)+'</b></span></div>'+
+     '<div class="kv"><span>'+d.txtData+'</span><span class="num">'+fmtBytes(stor.text)+'</span></div>'+
+     '<div class="kv"><span>'+d.filesData+'</span><span class="num">'+fmtBytes(stor.files)+'</span></div>'+
+   '</div>'+
    '<div class="grid2"><div>'+
    panel(d.companyT,'', '<div style="padding:16px 18px">'+
      fld(d.company,'sg_name',null,null,tn.company_name)+fld(d.street,'sg_street',null,null,tn.street)+
