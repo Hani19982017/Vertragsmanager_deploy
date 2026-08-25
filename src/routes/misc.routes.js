@@ -111,4 +111,21 @@ router.get('/storage', asyncH(async (req, res) => {
   ok(res, out);
 }));
 
+// POST /api/feedback { message } — sends a note to the platform team
+router.post('/feedback', asyncH(async (req, res) => {
+  const msg = String((req.body && req.body.message) || '').trim().slice(0, 5000);
+  if (!msg) return fail(res, 400, 'empty');
+  const to = process.env.FEEDBACK_EMAIL;
+  if (!to) return fail(res, 501, 'feedback_not_configured');
+  const M = require('../mailer');
+  const sent = await M.send({
+    to,
+    subject: 'Feedback / Vorschlag von ' + (req.user.email || 'Nutzer'),
+    text: 'Von: ' + (req.user.name || '') + ' <' + (req.user.email || '') + '>\n' +
+          'Firma-ID: ' + (req.user.tenant_id || '') + '\n\n' + msg
+  });
+  if (!sent) return fail(res, 501, 'feedback_not_configured');
+  ok(res);
+}));
+
 module.exports = router;
