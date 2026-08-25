@@ -26,7 +26,7 @@ padding:30px;box-shadow:var(--shx)}
 .lbox img{height:74px;display:block;margin:0 auto 14px}
 .shell{display:flex;min-height:100vh}
 .side{width:236px;background:#12172a;padding:16px 13px;display:flex;flex-direction:column;flex-shrink:0}
-.side img{height:44px;width:auto;object-fit:contain;margin:2px 6px 14px}
+.side img{height:64px;width:auto;object-fit:contain;margin:4px 6px 16px}
 .nav{display:flex;flex-direction:column;gap:2px}
 .ngrp{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;color:#5e6784;padding:16px 10px 6px;font-weight:600}
 .nav button{text-align:start;padding:9px 11px;border-radius:9px;color:#aeb6cd;font-size:13.5px;
