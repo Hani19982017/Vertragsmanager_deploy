@@ -57,6 +57,20 @@ router.get('/:id', asyncH(async (req, res) => {
     const documents = (await c.query(
       `SELECT id, file_name, mime_type, size_bytes, contract_id, created_at
          FROM documents WHERE customer_id=$1 ORDER BY created_at DESC`, [cu.id])).rows;
+    const filesBytes = documents.reduce((sum, d) => sum + (Number(d.size_bytes) || 0), 0);
+    // Real stored size of this customer's own database rows (their record,
+    // their contracts, their activity log, and each document's metadata —
+    // NOT the uploaded file bytes themselves, which are counted in filesBytes
+    // above). pg_column_size() reports PostgreSQL's actual on-disk row size.
+    const textRow = (await c.query(
+      `SELECT
+         pg_column_size(cu.*) AS cust,
+         (SELECT COALESCE(SUM(pg_column_size(ct.*)),0) FROM contracts ct WHERE ct.customer_id=$1) AS ctr,
+         (SELECT COALESCE(SUM(pg_column_size(a.*)),0) FROM activities a WHERE a.customer_id=$1) AS act,
+         (SELECT COALESCE(SUM(pg_column_size(d.*)),0) FROM documents d WHERE d.customer_id=$1) AS doc
+       FROM customers cu WHERE cu.id=$1`, [cu.id])).rows[0];
+    const textBytes = Number(textRow.cust) + Number(textRow.ctr) + Number(textRow.act) + Number(textRow.doc);
+    const storageBytes = filesBytes + textBytes; // grand total for this customer
     const cross = (await c.query(
       `SELECT service FROM v_cross_sell WHERE customer_id=$1`, [cu.id])).rows.map(r => r.service);
     const household = (await c.query(
@@ -64,7 +78,8 @@ router.get('/:id', asyncH(async (req, res) => {
         WHERE id<>$1 AND postal_code=$2 AND lower(coalesce(street,''))=lower(coalesce($3,''))
           AND street IS NOT NULL AND is_active`,
       [cu.id, cu.postal_code, cu.street])).rows;
-    return { customer: cu, contracts, activities, documents, cross, household };
+    return { customer: cu, contracts, activities, documents,
+             filesBytes, textBytes, storageBytes, cross, household };
   });
   if (out === null) return fail(res, 404, 'not_found');
   if (out === 'forbidden') return fail(res, 403, 'forbidden');
