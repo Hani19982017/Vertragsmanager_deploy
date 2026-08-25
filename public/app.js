@@ -46,6 +46,10 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  contracts:"Verträge",activity:"Verlauf",docsT:"Dokumente",storageUsed:"Speicherplatz",txtData:"Text",filesData:"Dateien",totalStorT:"Gesamter Speicherplatz",allCustStor:"Alle Kunden",cross:"Cross-Selling",hh:"Gleiche Adresse",
  noDoc:"Keine Dokumente",noAct:"Noch keine Aktivität",noFile:"Kein Vertragsdokument hinterlegt",
  editC:"Kontaktdaten bearbeiten",moveT:"Umzug melden",
+ delCust:"Kunde löschen",delContr:"Vertrag löschen",
+ delCustQ:"Diesen Kunden mit ALLEN Verträgen, Dokumenten und dem Verlauf endgültig löschen? Dies kann nicht rückgängig gemacht werden.",
+ delContrQ:"Diesen Vertrag mit seinen Dokumenten endgültig löschen? Dies kann nicht rückgängig gemacht werden.",
+ delType:"Zum Bestätigen LÖSCHEN eingeben",delWord:"LÖSCHEN",deleted:"Gelöscht",delCancel:"Abbrechen",delConfirm:"Endgültig löschen",
  moveS:"Ein Umzug beendet Strom- und Gasverträge sofort — und eröffnet neue.",
  moveD:"Umzugsdatum",addC:"Vertrag hinzufügen",
  wa:"WhatsApp",em:"E-Mail",ph:"Telefon",callS:"Diese Nummer auf dem Handy wählen.",
@@ -147,6 +151,10 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  contracts:"العقود",activity:"سجل التواصل",docsT:"الملفات",storageUsed:"المساحة المستخدمة",txtData:"نصوص",filesData:"ملفات",totalStorT:"إجمالي المساحة المستخدمة",allCustStor:"كل الزبائن",cross:"البيع المتقاطع",hh:"نفس العنوان",
  noDoc:"لا ملفات",noAct:"لا يوجد تواصل",noFile:"لا يوجد ملف عقد مرفق",
  editC:"تعديل بيانات التواصل",moveT:"تسجيل انتقال",
+ delCust:"حذف الزبون",delContr:"حذف العقد",
+ delCustQ:"هل تريد حذف هذا الزبون نهائيًا مع كل عقوده وملفاته وسجل تواصله؟ لا يمكن التراجع عن هذا الإجراء.",
+ delContrQ:"هل تريد حذف هذا العقد نهائيًا مع ملفاته؟ لا يمكن التراجع عن هذا الإجراء.",
+ delType:"اكتب «حذف» للتأكيد",delWord:"حذف",deleted:"تم الحذف",delCancel:"إلغاء",delConfirm:"حذف نهائي",
  moveS:"الانتقال يُنهي عقود الكهرباء والغاز فوراً — ويفتح عقوداً جديدة.",
  moveD:"تاريخ الانتقال",addC:"إضافة عقد",
  wa:"واتساب",em:"بريد",ph:"هاتف",callS:"اطلب هذا الرقم من جوالك.",
@@ -380,6 +388,37 @@ function closeNav(){
   if(o) o.classList.remove('show');
 }
 function openC(id){ SEL=id; V='cdet'; closeM(); render() }
+// typed-confirmation delete modal (requires typing the delete word)
+function delConfirmModal(question, onConfirm){
+  var d=t();
+  showM('<div class="mod"><h3 style="color:var(--red)">'+d.delConfirm+'</h3>'+
+    '<p>'+question+'</p>'+
+    '<div class="fld"><label>'+d.delType+'</label>'+
+    '<input id="del_word" dir="auto" autocomplete="off"></div>'+
+    '<div style="display:flex;gap:8px"><button class="btn" style="flex:1" onclick="closeM()">'+
+    d.delCancel+'</button><button class="btn" style="flex:1;background:var(--red);color:#fff;border-color:var(--red)" '+
+    'onclick="__doDelete()">'+d.delConfirm+'</button></div></div>');
+  window.__doDelete = async function(){
+    if((val('del_word')||'').trim().toLowerCase() !== d.delWord.toLowerCase()) return;
+    closeM();
+    try { await onConfirm(); toast(d.deleted); }
+    catch(e){ toast(d.err); }
+  };
+}
+function delCustomer(id){
+  var d=t();
+  delConfirmModal(d.delCustQ, async function(){
+    await api('/customers/'+id, {method:'DELETE'});
+    go('cust'); // back to the customer list
+  });
+}
+function delContract(id){
+  var d=t();
+  delConfirmModal(d.delContrQ, async function(){
+    await api('/contracts/'+id, {method:'DELETE'});
+    render(); // stay on the customer, refresh
+  });
+}
 
 function banner(){
   var d=t(); if(!ME || ME.trialDaysLeft===null || ME.tenantStatus!=='trial') return '';
@@ -499,6 +538,7 @@ async function vCdet(){
    '<button class="btn btn-p" onclick="ASST=null;openAssistant()">'+d.asstT+'</button>'+
    '<button class="btn" onclick="formMove()">'+d.moveT+'</button>'+
    '<button class="btn" onclick="formContact()">'+d.editC+'</button>'+
+   '<button class="btn" style="color:var(--red);border-color:var(--red)" onclick="delCustomer(\''+u.id+'\')">'+d.delCust+'</button>'+
    '<button class="btn btn-p" onclick="formContract(\''+u.id+'\')">'+d.addC+'</button></div></div>'+
    '<div class="grid2"><div>'+
    panel(d.contracts,'', x.contracts.length
@@ -565,6 +605,7 @@ function detailContractRow(c, docs){
      ' onchange="setPaid(\''+c.id+'\',this.checked)"> Provision</label>'+
    '<button class="btn btn-sm" onclick="formFup(\''+c.id+'\')">'+
      (c.follow_up_date?d.fupT+' '+fmt(c.follow_up_date):d.fupT)+'</button>'+
+   '<button class="btn btn-sm" style="color:var(--red);border-color:var(--red)" onclick="delContract(\''+c.id+'\')">'+d.delContr+'</button>'+
    '</div></div>'+
    '<span class="tag '+(c.status==='renewed'?'t-grn':c.status==='lost'?'t-red':'t-gry')+'">'+
      d.st[c.status]+'</span></div>';
