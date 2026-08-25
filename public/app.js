@@ -64,7 +64,7 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  setT:"Einstellungen",expT:"Kundenliste exportieren",ownOnly:"Nur für den Inhaber",
  expBlk:"Export gesperrt — nur der Inhaber darf die Kundenliste herunterladen",
  logT:"Zugriffsprotokoll",dupT:"Mögliche Dubletten",noDup:"Keine Dubletten gefunden",
- usage:"Nutzung",custs:"Kunden",seats:"Mitarbeiter",myCust:"Meine Kunden",
+ usage:"Nutzung",custs:"Kunden",seats:"Mitarbeiter",mgr:"Manager",emp:"Mitarbeiter",and:"und",myCust:"Meine Kunden",
  trialN:"Testversion — noch {n} Tage. Alle Funktionen sind freigeschaltet.",
  trialEnd:"Die Testphase ist beendet.",upgrade:"Abonnieren",
  saved:"Gespeichert",added:"Hinzugefügt",done:"Erledigt",err:"Fehler",
@@ -97,6 +97,7 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  qualT:"Datenqualität",noEnd:"ohne Vertragsende",noNotice:"ohne Kündigungsfrist",
  noDocQ:"ohne Dokument",unpaidQ:"Provision offen",
  billT:"Abonnement",curPlan:"Aktueller Plan",choose:"Auswählen",manage:"Zahlungen verwalten",
+ cycMonthly:"Monatlich",cycYearly:"Jährlich",perMo:"/Mon.",perYr:"/Jahr",yrSave:"2 Monate gratis",upgrade:"Upgrade",
  billOff:"Zahlungen sind noch nicht eingerichtet.",
  asstT:"Assistent",asstS:"Schreiben und Nachrichten aus den Daten dieses Kunden",
  asstAsk:"Was soll ich schreiben?",asstPh:"z. B. Kündigung, Widerruf, Verlängerung anbieten…",
@@ -164,7 +165,7 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  setT:"الإعدادات",expT:"تصدير قائمة الزبائن",ownOnly:"لصاحب المكتب فقط",
  expBlk:"التصدير مقفل — صاحب المكتب وحده يستطيع تنزيل قائمة الزبائن",
  logT:"سجل الوصول",dupT:"تكرارات محتملة",noDup:"لا تكرارات",
- usage:"الاستخدام",custs:"زبون",seats:"موظف",myCust:"زبائني",
+ usage:"الاستخدام",custs:"زبون",seats:"موظف",mgr:"مدير",emp:"موظف",and:"و",myCust:"زبائني",
  trialN:"نسخة تجريبية — بقي {n} يوماً. كل الميزات مفتوحة.",
  trialEnd:"انتهت الفترة التجريبية.",upgrade:"اشترك",
  saved:"تم الحفظ",added:"تمت الإضافة",done:"تم",err:"خطأ",
@@ -197,6 +198,7 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  qualT:"جودة البيانات",noEnd:"بلا تاريخ انتهاء",noNotice:"بلا مهلة إنهاء",
  noDocQ:"بلا ملف",unpaidQ:"عمولة معلّقة",
  billT:"الاشتراك",curPlan:"الباقة الحالية",choose:"اختيار",manage:"إدارة الدفع",
+ cycMonthly:"شهري",cycYearly:"سنوي",perMo:"/شهر",perYr:"/سنة",yrSave:"شهرين مجانًا",upgrade:"ترقية",
  billOff:"الدفع غير مُعدّ بعد.",
  asstT:"المساعد",asstS:"يكتب الخطابات والرسائل من بيانات هذا الزبون",
  asstAsk:"ماذا تريدني أن أكتب؟",asstPh:"مثال: خطاب إنهاء، حق الرجوع، عرض تجديد…",
@@ -1517,9 +1519,23 @@ async function vRep(){
 }
 
 /* ---------------- billing ---------------- */
+function seatLabel(seats, d){
+  var emp = Math.max(0, (seats||0) - 1);
+  // always 1 manager; the remaining seats are employees
+  return '<span class="num">1</span> '+d.mgr+
+    ' '+d.and+' <span class="num">'+emp+'</span> '+d.emp;
+}
+var BILL_CYCLE = 'monthly';
+function setCycle(c){ BILL_CYCLE = c; render(); }
 async function vBill(){
   var d=t(), p = await api('/billing/plans');
   var names = Object.keys(p.plans);
+  var yr = BILL_CYCLE === 'yearly';
+  var toggle =
+   '<div class="cycle-tog">'+
+   '<button class="'+(!yr?'on':'')+'" onclick="setCycle(\'monthly\')">'+d.cycMonthly+'</button>'+
+   '<button class="'+(yr?'on':'')+'" onclick="setCycle(\'yearly\')">'+d.cycYearly+
+     ' <span class="cycle-save">'+d.yrSave+'</span></button></div>';
   return '<div class="head"><div><h1>'+d.billT+'</h1>'+
    '<div class="sub">'+d.curPlan+': '+esc(ME.plan)+'</div></div>'+
    (p.enabled?'<button class="btn" onclick="portal()">'+d.manage+'</button>':'')+'</div>'+
@@ -1529,20 +1545,22 @@ async function vBill(){
      ((ME.usage&&ME.usage.customers)||0)+' / '+ME.maxCustomers+'</span></div>'+
    '<div class="kv"><span>'+d.seats+'</span><span class="num">'+
      ((ME.usage&&ME.usage.seats)||0)+' / '+ME.maxSeats+'</span></div></div>'+
+   toggle+
    '<div class="cards">'+names.map(function(n){
      var pl=p.plans[n], cur = ME.plan===n;
+     var price = yr ? pl.yearly : pl.monthly;
+     var per = yr ? d.perYr : d.perMo;
      return '<div class="mc" style="cursor:default'+(cur?';border:2px solid var(--acc)':'')+'">'+
       '<div class="l" style="text-transform:capitalize;font-size:14px;font-weight:600;color:var(--tx)">'+
-      n+'</div><div class="v num">'+pl.price+' €<span style="font-size:13px;color:var(--tx2)"> /mo</span></div>'+
+      n+'</div><div class="v num">'+price+' €<span style="font-size:13px;color:var(--tx2)"> '+per+'</span></div>'+
       '<div style="font-size:12.5px;color:var(--tx2);margin:8px 0 12px">'+
-      '<span class="num">'+pl.customers+'</span> '+d.custs+' · <span class="num">'+pl.seats+'</span> '+
-      d.seats+'</div>'+
+      '<span class="num">'+pl.customers+'</span> '+d.custs+' · '+seatLabel(pl.seats,d)+'</div>'+
       (cur?'<span class="tag t-blue">'+d.curPlan+'</span>'
         :'<button class="btn btn-sm btn-p" style="width:100%"'+(p.enabled?'':' disabled')+
          ' onclick="checkout(\''+n+'\')">'+d.choose+'</button>')+'</div>' }).join('')+'</div>';
 }
 async function checkout(plan){
-  try{ var r = await api('/billing/checkout',{method:'POST',body:{plan:plan}});
+  try{ var r = await api('/billing/checkout',{method:'POST',body:{plan:plan,cycle:BILL_CYCLE}});
     location.href = r.url;
   }catch(e){ toast(t().billOff) }
 }
