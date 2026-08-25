@@ -3,22 +3,50 @@ const A = require('../auth');
 const { raw } = require('../db');
 const { ok, fail, asyncH } = require('../util');
 
+// Each plan has a monthly and a yearly option. Yearly is priced at 10x the
+// monthly rate (i.e. two months free) — adjust the numbers here and create the
+// matching prices in Stripe. Each cycle maps to its own Stripe Price env var.
 const PLANS = {
-  starter: { price: 39, customers: 100, seats: 1, env: 'STRIPE_PRICE_STARTER' },
-  growth:  { price: 69, customers: 300, seats: 3, env: 'STRIPE_PRICE_GROWTH' },
-  pro:     { price: 100, customers: 600, seats: 5, env: 'STRIPE_PRICE_PRO' }
+  starter: {
+    customers: 100, seats: 1,
+    monthly: { price: 39,  env: 'STRIPE_PRICE_STARTER' },
+    yearly:  { price: 390, env: 'STRIPE_PRICE_STARTER_YEARLY' }
+  },
+  growth: {
+    customers: 300, seats: 3,
+    monthly: { price: 69,  env: 'STRIPE_PRICE_GROWTH' },
+    yearly:  { price: 690, env: 'STRIPE_PRICE_GROWTH_YEARLY' }
+  },
+  pro: {
+    customers: 600, seats: 5,
+    monthly: { price: 100,  env: 'STRIPE_PRICE_PRO' },
+    yearly:  { price: 1000, env: 'STRIPE_PRICE_PRO_YEARLY' }
+  }
 };
 const stripeEnabled = () => !!process.env.STRIPE_SECRET_KEY;
 const stripe = () => require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-router.get('/plans', (_req, res) => ok(res, { plans: PLANS, enabled: stripeEnabled() }));
+router.get('/plans', (_req, res) => {
+  // Flatten for the UI: expose customers/seats plus both cycle prices.
+  const out = {};
+  for (const [name, p] of Object.entries(PLANS)) {
+    out[name] = {
+      customers: p.customers,
+      seats: p.seats,
+      monthly: p.monthly.price,
+      yearly: p.yearly.price
+    };
+  }
+  ok(res, { plans: out, enabled: stripeEnabled() });
+});
 
-// POST /api/billing/checkout { plan }
+// POST /api/billing/checkout { plan, cycle }
 router.post('/checkout', A.requireAuth, A.requireOwner, asyncH(async (req, res) => {
   const plan = PLANS[req.body.plan];
   if (!plan) return fail(res, 400, 'unknown_plan');
+  const cycle = req.body.cycle === 'yearly' ? 'yearly' : 'monthly';
   if (!stripeEnabled()) return fail(res, 501, 'billing_not_configured');
-  const priceId = process.env[plan.env];
+  const priceId = process.env[plan[cycle].env];
   if (!priceId) return fail(res, 501, 'price_id_missing');
 
   const s = stripe();
@@ -43,10 +71,17 @@ router.post('/checkout', A.requireAuth, A.requireOwner, asyncH(async (req, res) 
     mode: 'subscription',
     customer: customerId,
     line_items: [{ price: priceId, quantity: 1 }],
-    payment_method_types: ['card', 'sepa_debit'],
+    // Let Stripe present every payment method you've enabled in the
+    // Stripe Dashboard that is eligible for this customer/currency —
+    // for a German (EUR) account that includes SEPA-Lastschrift, cards,
+    // and (where available) Giropay, Klarna, and others. Manage which
+    // ones appear under Settings → Payment methods in Stripe; no code
+    // change is needed to add or remove a method.
+    automatic_payment_methods: { enabled: true },
+    billing_address_collection: 'auto',
     success_url: base + '/?billing=ok',
     cancel_url: base + '/?billing=cancel',
-    metadata: { tenant_id: req.user.tenant_id, plan: req.body.plan }
+    metadata: { tenant_id: req.user.tenant_id, plan: req.body.plan, cycle: cycle }
   });
   ok(res, { url: session.url });
 }));
