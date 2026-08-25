@@ -94,6 +94,9 @@ de:{app:"Vertragsmanager",tagline:"Verträge · Kunden · Kommunikation",
  connS:"Funktioniert mit Gmail, Outlook, IONOS, Strato, Hostinger und jedem eigenen Server",
  preset:"Anbieter",imapH:"IMAP-Server",portL:"Port",smtpH:"SMTP-Server",appPw:"App-Passwort",
  conn:"Verbinden",disc:"Trennen",syncT:"Abrufen",notConn:"Kein E-Mail-Konto verbunden",
+ mailOk:"E-Mail-Konto erfolgreich verbunden",
+ mailAuthErr:"Anmeldung fehlgeschlagen. Bei Gmail/Outlook ein App-Passwort verwenden, nicht das normale Passwort.",
+ mailConnErr:"Verbindung zum Mailserver fehlgeschlagen. Server und Port prüfen.",
  suggT:"Erkannte Verträge",suggS:"Nichts wird automatisch gespeichert — Sie bestätigen jeden Eintrag",
  archiveIt:"Als Vertrag archivieren",ignoreIt:"Ignorieren",matchedT:"Zugeordnet",unmatchedT:"Kein Kunde erkannt",
  imported:"{n} Nachrichten importiert",
@@ -199,6 +202,9 @@ ar:{app:"Vertragsmanager",tagline:"عقود · زبائن · تواصل",
  connS:"يعمل مع جيميل وأوتلوك وهوستنجر وأي خادم بريد خاص",
  preset:"المزوّد",imapH:"خادم الاستقبال",portL:"المنفذ",smtpH:"خادم الإرسال",appPw:"كلمة مرور التطبيق",
  conn:"ربط",disc:"فصل",syncT:"جلب الرسائل",notConn:"لا يوجد حساب بريد مرتبط",
+ mailOk:"تم ربط حساب البريد بنجاح",
+ mailAuthErr:"فشل تسجيل الدخول. مع Gmail/Outlook لازم تستخدم «كلمة مرور التطبيق» مش كلمة السر العادية.",
+ mailConnErr:"فشل الاتصال بخادم البريد. تأكد من اسم الخادم والمنفذ.",
  suggT:"عقود مكتشفة",suggS:"لا يُحفظ شيء تلقائياً — أنت تؤكد كل عنصر",
  archiveIt:"أرشفة كعقد",ignoreIt:"تجاهل",matchedT:"مطابق",unmatchedT:"لم يُتعرّف على زبون",
  imported:"تم استيراد {n} رسالة",
@@ -412,6 +418,13 @@ function delCustomer(id){
     go('cust'); // back to the customer list
   });
 }
+function delCustomerFromList(id){
+  var d=t();
+  delConfirmModal(d.delCustQ, async function(){
+    await api('/customers/'+id, {method:'DELETE'});
+    reloadList(); // stay on the list, just refresh it
+  });
+}
 function delContract(id){
   var d=t();
   delConfirmModal(d.delContrQ, async function(){
@@ -515,7 +528,9 @@ function custList(rows){
         :'<div class="days '+urg(n)+'"><b class="num">'+n+'</b><s>'+d.days+'</s></div>')+
       '<div class="info" onclick="openC(\''+u.id+'\')"><b>'+esc(u.first_name+' '+u.last_name)+'</b>'+
       '<small class="num">'+esc(u.phone||u.email||'')+'</small></div>'+
-      '<span class="tag t-gry"><span class="num">'+u.contract_count+'</span> '+d.contracts+'</span></div>';
+      '<span class="tag t-gry"><span class="num">'+u.contract_count+'</span> '+d.contracts+'</span>'+
+      '<button class="xb" title="'+d.delCust+'" style="color:var(--red);width:30px;height:30px;font-size:15px" '+
+      'onclick="event.stopPropagation();delCustomerFromList(\''+u.id+'\')">🗑</button></div>';
   }).join('');
 }
 async function reloadList(){
@@ -1479,12 +1494,18 @@ function applyPreset(k){
   setv('ic_imap',p[0]); setv('ic_ip',p[1]); setv('ic_smtp',p[2]); setv('ic_sp',p[3]);
 }
 async function doConnect(){
+  var d=t();
   try{
     await api('/inbox/connect',{method:'POST',body:{
       email:val('ic_email'), imap_host:val('ic_imap'), imap_port:parseInt(val('ic_ip'),10),
       smtp_host:val('ic_smtp'), smtp_port:parseInt(val('ic_sp'),10), password:val('ic_pw')}});
-    closeM(); toast(t().saved); render();
-  }catch(e){ toast(t().err+': '+e.message) }
+    closeM(); toast(d.mailOk); render();
+  }catch(e){
+    var m = e.message==='auth_failed' ? d.mailAuthErr
+          : e.message==='imap_connect_failed' ? d.mailConnErr
+          : d.err+': '+e.message;
+    toast(m);
+  }
 }
 async function disconnectMail(){ await api('/inbox/connect',{method:'DELETE'}); render() }
 
