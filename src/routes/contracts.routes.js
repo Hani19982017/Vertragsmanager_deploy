@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const A = require('../auth');
+const storage = require('../storage');
 const { ok, fail, asyncH, str, int, date, SERVICES, SUBMISSION, OUTCOMES } = require('../util');
 
 router.use(A.requireAuth);
@@ -232,6 +233,31 @@ router.post('/:id/followup', asyncH(async (req, res) => {
     [d, req.body.clear ? null : str(req.body.follow_up_note, 500), req.params.id]));
   if (!r.rowCount) return fail(res, 404, 'not_found');
   ok(res, r.rows[0]);
+}));
+
+// DELETE /api/contracts/:id — permanently delete a contract and its files
+router.delete('/:id', asyncH(async (req, res) => {
+  const out = await A.scope(req, async (c) => {
+    const cur = (await c.query('SELECT * FROM contracts WHERE id=$1', [req.params.id])).rows[0];
+    if (!cur) return null;
+    // gather this contract's document file keys so we can delete the blobs too
+    const docs = (await c.query(
+      'SELECT id, storage_key FROM documents WHERE contract_id=$1', [cur.id])).rows;
+    // record the deletion in the audit log (survives the delete)
+    await c.query(
+      `INSERT INTO audit_log (tenant_id, user_id, table_name, record_id, field_name, old_value, new_value)
+       VALUES (current_setting('app.tenant_id')::uuid,$1,'contracts',$2,'deleted',$3,NULL)`,
+      [req.user.id, cur.id, (cur.provider_name || cur.contract_number || cur.id)]);
+    // remove the contract's document rows (FK would otherwise just null them
+    // out, leaving orphaned metadata), then the contract itself
+    await c.query('DELETE FROM documents WHERE contract_id=$1', [cur.id]);
+    await c.query('DELETE FROM contracts WHERE id=$1', [cur.id]);
+    return docs;
+  });
+  if (out === null) return fail(res, 404, 'not_found');
+  // best-effort remove the actual stored files (outside the DB transaction)
+  for (const d of out) { try { await storage.del(d.storage_key); } catch (e) {} }
+  ok(res);
 }));
 
 module.exports = router;
