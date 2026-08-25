@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const A = require('../auth');
+const storage = require('../storage');
 const { ok, fail, asyncH, str, date } = require('../util');
 
 router.use(A.requireAuth);
@@ -150,6 +151,32 @@ router.post('/:id/move', asyncH(async (req, res) => {
     return r.rowCount;
   });
   ok(res, { affected_contracts: out });
+}));
+
+// DELETE /api/customers/:id — permanently delete a customer and ALL their
+// data (contracts, activities, documents). This cannot be undone.
+router.delete('/:id', asyncH(async (req, res) => {
+  const out = await A.scope(req, async (c) => {
+    const cu = (await c.query('SELECT * FROM customers WHERE id=$1', [req.params.id])).rows[0];
+    if (!cu) return null;
+    if (req.user.role !== 'owner' && req.user.restrict_agents
+        && cu.assigned_user_id !== req.user.id) return 'forbidden';
+    // collect every stored file key for this customer before the cascade wipes the rows
+    const docs = (await c.query(
+      'SELECT storage_key FROM documents WHERE customer_id=$1', [cu.id])).rows;
+    // audit record (audit_log has no FK to customers, so it survives)
+    await c.query(
+      `INSERT INTO audit_log (tenant_id, user_id, table_name, record_id, field_name, old_value, new_value)
+       VALUES (current_setting('app.tenant_id')::uuid,$1,'customers',$2,'deleted',$3,NULL)`,
+      [req.user.id, cu.id, (cu.first_name + ' ' + cu.last_name)]);
+    // deleting the customer cascades to contracts, activities and documents
+    await c.query('DELETE FROM customers WHERE id=$1', [cu.id]);
+    return docs;
+  });
+  if (out === null) return fail(res, 404, 'not_found');
+  if (out === 'forbidden') return fail(res, 403, 'forbidden');
+  for (const d of out) { try { await storage.del(d.storage_key); } catch (e) {} }
+  ok(res);
 }));
 
 module.exports = router;
