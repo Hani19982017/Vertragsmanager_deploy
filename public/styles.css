@@ -111,6 +111,7 @@ html[dir=rtl] .toast{transform:translateX(50%)}
 .dz{border:2px dashed var(--acc);background:var(--accbg);border-radius:12px;padding:22px 16px;
 text-align:center;cursor:pointer;margin-bottom:8px}
 .dz:hover{background:#e6ebff}
+.dz svg{width:38px;height:38px;color:var(--acc);margin-bottom:8px}
 .dz b{display:block;font-size:14px;color:#1039a8}.dz small{color:var(--tx2);font-size:12px}
 .dz.ok{border-style:solid;border-color:var(--grn);background:var(--grnbg)}.dz.ok b{color:var(--grn)}
 .dz.bad{border-style:solid;border-color:var(--org);background:var(--orgbg)}.dz.bad b{color:var(--org)}
